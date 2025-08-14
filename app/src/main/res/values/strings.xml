@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">english_learning</string>
+    <string name="email_description">Email Icon</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show Password</string>
 </resources>

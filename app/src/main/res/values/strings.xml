@@ -3,4 +3,11 @@
     <string name="email_description">Email Icon</string>
     <string name="hide_password">Hide password</string>
     <string name="show_password">Show Password</string>
+    <string name="hi">Hi!</string>
+    <string name="welcome_message">Welcome to our Quizz Learning application\nPlease login!</string>
+    <string name="email_label">email</string>
+    <string name="password_label">password</string>
+    <string name="login">Login!</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
+    <string name="register">register</string>
 </resources>

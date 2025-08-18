@@ -8,11 +8,9 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.kotlinpl.english_learning.quizzes.presentation.components.QuestionWithOptionComposable
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.kotlinpl.english_learning.auth.presentation.login_screen.LoginScreen
 import com.kotlinpl.english_learning.ui.theme.English_learningTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,29 +23,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             English_learningTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    QuestionWithOptionComposable(
-                        onSubmitAnswer = {},
-                        mainViewModel = viewModel,
-                        modifier = Modifier.padding(innerPadding)
+                    LoginScreen(
+                        viewModel = hiltViewModel(),
+                        modifier = Modifier.padding(innerPadding),
+                        onRegisterClick = {},
+                        onLoggedIn = {  },
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    English_learningTheme {
-        Greeting("Android")
     }
 }

@@ -51,7 +51,10 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.bundles.room.db)
 
+    implementation(libs.bundles.network)
+
     implementation(libs.hilt)
+    implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

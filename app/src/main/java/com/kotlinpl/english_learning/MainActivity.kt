@@ -9,25 +9,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.kotlinpl.english_learning.auth.presentation.login_screen.LoginScreen
+import androidx.navigation.compose.rememberNavController
+import com.kotlinpl.english_learning.Navigation.NavigationComposable
 import com.kotlinpl.english_learning.ui.theme.English_learningTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val viewModel : MainViewModel by viewModels()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             English_learningTheme {
+                val navController = rememberNavController()
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    LoginScreen(
-                        viewModel = hiltViewModel(),
-                        modifier = Modifier.padding(innerPadding),
-                        onRegisterClick = {},
-                        onLoggedIn = {  },
+                    NavigationComposable(
+                        navController = navController,
+                        isLoggedIn = true, // TODO change hardcoded isLoggedIn flag
+                        modifier = Modifier.padding(innerPadding)
                     )
                 }
             }

@@ -1,15 +1,19 @@
-package com.kotlinpl.english_learning.auth.presentation.login_screen
+package com.kotlinpl.english_learning.auth.presentation.register_screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
@@ -22,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
@@ -39,14 +44,17 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.kotlinpl.english_learning.R
+import com.kotlinpl.english_learning.auth.domain.PASSWORD_MIN_LENGTH
+import com.kotlinpl.english_learning.auth.domain.PasswordValidationState
 import com.kotlinpl.english_learning.common.ui.EyeClosed
 import com.kotlinpl.english_learning.common.ui.EyeOpen
 import com.kotlinpl.english_learning.ui.theme.English_learningTheme
+import androidx.compose.ui.graphics.Color
 
 @Composable
-fun LoginScreen(
-    viewModel: LoginViewModel,
-    onRegisterClick: () -> Unit,
+fun RegisterScreen(
+    viewModel: RegisterViewModel,
+    onLoginClick: () -> Unit, // used for navigation
     onLoggedIn: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -54,7 +62,7 @@ fun LoginScreen(
      *
      */
 
-    LoginScreenStateless(
+    RegisterScreenStateless(
         currentUIState = viewModel.uiState,
         onPasswordUpdate = { newValue ->
             viewModel.updatePasswordTextFieldValue(newValue)
@@ -62,25 +70,25 @@ fun LoginScreen(
         onEmailUpdate = { newValue ->
             viewModel.updateEmailTextFieldValue(newValue)
         },
-        onLoginClick = {
-            viewModel.login()
-        },
+        onLoginClick = onLoginClick,
         onTogglePasswordVisibilityClick = {
             viewModel.togglePasswordVisibility()
         },
-        onRegisterClick = onRegisterClick,
+        onRegisterClick = {
+            viewModel.register()
+        },
         modifier = modifier
     )
 }
 
 @Composable
-fun LoginScreenStateless(
-    currentUIState: LoginUIState, // pass a copy of current state
+fun RegisterScreenStateless(
+    currentUIState: RegisterUIState, // pass a copy of current state
     onEmailUpdate: (TextFieldValue) -> Unit, // lambda to handle email update on TextField
     onPasswordUpdate: (TextFieldValue) -> Unit, // lambda to handle password update on TextField
     onTogglePasswordVisibilityClick: () -> Unit, // Toggle Password Visibility
-    onRegisterClick: () -> Unit, // used to navigate to register screen
-    onLoginClick: () -> Unit, // lambda to handle Login Request
+    onRegisterClick: () -> Unit, // used to handle register request
+    onLoginClick: () -> Unit, // lambda to navigate to login screen
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -97,7 +105,7 @@ fun LoginScreenStateless(
         )
 
         Text(
-            text = stringResource(R.string.welcome_message),
+            text = stringResource(R.string.welcome_message) + "\n" + stringResource(R.string.please_login),
             fontSize = 14.sp
         )
 
@@ -106,17 +114,17 @@ fun LoginScreenStateless(
         Text(
             buildAnnotatedString {
                 // TODO: Check how to use Material Theme default text stype as "SpanStyle"
-                append(stringResource(R.string.dont_have_account) + " ")
+                append(stringResource(R.string.already_have_an_account) + " ")
 
                 val link = LinkAnnotation.Clickable(
-                    tag = stringResource(R.string.register),
+                    tag = stringResource(R.string.login),
                     linkInteractionListener = {
                         onRegisterClick()
                     },
                     styles = TextLinkStyles(SpanStyle(color = MaterialTheme.colorScheme.primary))
                 )
                 withLink(link) {
-                    append(stringResource(R.string.register))
+                    append(stringResource(R.string.login))
                 }
             }
         )
@@ -134,6 +142,9 @@ fun LoginScreenStateless(
                     imageVector = Icons.Default.Email,
                     contentDescription = null
                 )
+            },
+            supportingText = {
+                Text(stringResource(R.string.must_be_valid_email))
             },
             modifier = Modifier
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.corner_radius_large)))
@@ -182,32 +193,71 @@ fun LoginScreenStateless(
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_xl)))
         Button(
             onClick = onLoginClick,
-            enabled = currentUIState.canLogin,
+            enabled = currentUIState.canRegister,
             modifier = Modifier
                 .fillMaxWidth()
         ) {
             Text(
-                text = stringResource(R.string.login)
+                text = stringResource(R.string.register)
             )
         }
+
+        // Validations UI for User
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_xxl)))
+
+        // Min Length Password Requirement
+        PasswordRequirement(
+            isValid = currentUIState.passwordValidationState.hasMinLength,
+            text = stringResource(R.string.has_min_length)
+                    + " ${PASSWORD_MIN_LENGTH} "
+                    + stringResource(R.string.characters)
+        )
+
+        // Number password requirement
+        PasswordRequirement(
+            isValid = currentUIState.passwordValidationState.hasNumber,
+            text = stringResource(R.string.password_must_have_a_number)
+        )
+
+        // LowerCase password requirement
+        PasswordRequirement(
+            isValid = currentUIState.passwordValidationState.hasLowerCaseCharacter,
+            text = stringResource(R.string.password_must_have_a_lowercase)
+        )
+
+        // Uppercase password requirement
+        PasswordRequirement(
+            isValid = currentUIState.passwordValidationState.hasUpperCaseCharacter,
+            text = stringResource(R.string.password_must_have_an_uppercase)
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun LoginPreview() {
+private fun RegisterPreview() {
+    var passwordState by remember {
+        mutableStateOf(PasswordValidationState(
+            hasMinLength = false,
+            hasNumber = true,
+            hasLowerCaseCharacter = true,
+            hasUpperCaseCharacter = false
+        ))
+    }
+
     var state by remember {
-        mutableStateOf(LoginUIState(
+        mutableStateOf(RegisterUIState(
             email = TextFieldValue(),
             password = TextFieldValue(),
             isPasswordVisible = true,
-            canLogin = true,
-            isLoggingIn = false
+            canRegister = true,
+            isRegistering = false,
+            passwordValidationState = passwordState
         ))
     }
 
     English_learningTheme {
-        LoginScreenStateless(
+        RegisterScreenStateless(
             currentUIState = state,
             onEmailUpdate = { newEmail ->
                 state = state.copy(email = newEmail)
@@ -221,5 +271,32 @@ private fun LoginPreview() {
             },
             onRegisterClick = {},
         )
+    }
+}
+
+@Composable
+fun PasswordRequirement(
+    text: String,
+    isValid: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Icon
+        Icon(
+            imageVector = if (isValid) Icons.Default.Check else Icons.Default.Close,
+            contentDescription = null,
+            tint = if (!isValid) MaterialTheme.colorScheme.error else Color.Green
+        )
+
+        Spacer(modifier = Modifier.width(dimensionResource(R.dimen.spacing_m)))
+        // Text
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelMedium
+        )
+
     }
 }

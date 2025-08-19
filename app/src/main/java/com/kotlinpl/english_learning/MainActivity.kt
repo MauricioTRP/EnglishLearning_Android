@@ -4,13 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.kotlinpl.english_learning.Navigation.NavigationComposable
+import com.kotlinpl.english_learning.navigation.NavigationComposable
 import com.kotlinpl.english_learning.ui.theme.English_learningTheme
 import dagger.hilt.android.AndroidEntryPoint
 

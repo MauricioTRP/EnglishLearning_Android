@@ -53,7 +53,7 @@ class LoginViewModel @Inject constructor (
         uiState = uiState.copy(isPasswordVisible = !uiState.isPasswordVisible)
     }
 
-    fun checkCanLogin() {
+    private fun checkCanLogin() {
         uiState = if(Patterns.EMAIL_ADDRESS.matcher(uiState.email.text).matches() && uiState.password.text.length >= PASSWORD_MIN_LENGTH) {
             uiState.copy(canLogin = true)
         } else {

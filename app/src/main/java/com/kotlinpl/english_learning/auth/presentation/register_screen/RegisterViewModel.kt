@@ -1,5 +1,6 @@
 package com.kotlinpl.english_learning.auth.presentation.register_screen
 
+import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -7,6 +8,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kotlinpl.english_learning.auth.domain.AuthRepository
+import com.kotlinpl.english_learning.auth.domain.PASSWORD_MIN_LENGTH
+import com.kotlinpl.english_learning.auth.domain.PasswordValidationState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor (
     private val authRepository: AuthRepository
-) : ViewModel() {
+) : ViewModel()  {
     var uiState by mutableStateOf(RegisterUIState())
         private set
 
@@ -38,14 +41,41 @@ class RegisterViewModel @Inject constructor (
      * UI Related tasks
      */
     fun updatePasswordTextFieldValue(newPassword: TextFieldValue) {
-        uiState = uiState.copy(password = newPassword)
+        uiState = uiState.copy(
+            password = newPassword,
+            passwordValidationState = validatePassword(newPassword.text),
+            canRegister = canRegister()
+        )
     }
 
     fun updateEmailTextFieldValue(newEmail: TextFieldValue) {
-        uiState = uiState.copy(email = newEmail)
+        uiState = uiState.copy(
+            email = newEmail,
+            canRegister = canRegister()
+        )
     }
 
     fun togglePasswordVisibility() {
         uiState = uiState.copy(isPasswordVisible = !uiState.isPasswordVisible)
     }
+
+    private fun canRegister() : Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(uiState.email.text).matches() &&
+                uiState.passwordValidationState.isValidPassword
+    }
+
+    private fun validatePassword(password: String) : PasswordValidationState {
+        val hasMinLength = password.length >= PASSWORD_MIN_LENGTH
+        val hasNumber = password.any { it.isDigit() }
+        val hasLowerCase = password.any{ it.isLowerCase() }
+        val hasUpperCase = password.any { it.isUpperCase() }
+
+        return PasswordValidationState(
+            hasMinLength = hasMinLength,
+            hasNumber = hasNumber,
+            hasLowerCaseCharacter = hasLowerCase,
+            hasUpperCaseCharacter = hasUpperCase
+        )
+    }
 }
+

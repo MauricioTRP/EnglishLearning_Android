@@ -1,4 +1,4 @@
-package com.kotlinpl.english_learning.Navigation
+package com.kotlinpl.english_learning.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

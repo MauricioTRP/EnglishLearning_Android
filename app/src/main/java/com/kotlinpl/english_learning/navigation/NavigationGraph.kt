@@ -1,4 +1,4 @@
-package com.kotlinpl.english_learning.Navigation
+package com.kotlinpl.english_learning.navigation
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.kotlinpl.english_learning.auth.presentation.login_screen.LoginScreen
+import com.kotlinpl.english_learning.auth.presentation.register_screen.RegisterScreen
 
 @Composable
 fun NavigationComposable(
@@ -77,17 +78,15 @@ private fun NavGraphBuilder.authGraph(navController: NavController, modifier: Mo
          * Register Composable
          */
         composable(route = AuthScreens.Register.route) {
-            Column(
-                modifier = modifier
-            ) {
 
-                Text("Register")
-                Button(
-                    onClick = {
-                        navController.navigate(AuthScreens.Login.route)
-                    }
-                ) { Text("Go back to Login") }
-            }
+            RegisterScreen(
+                viewModel = hiltViewModel(),
+                onLoginClick = {
+                    navController.navigate(AuthScreens.Login.route)
+                },
+                onLoggedIn = {}, // used to navigate main screen
+                modifier = modifier
+            )
         }
 
     }

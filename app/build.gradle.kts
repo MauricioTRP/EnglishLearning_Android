@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.room)
+    alias(libs.plugins.serialization)
+    alias(libs.plugins.protobuf)
 }
 
 room {
@@ -46,12 +48,40 @@ android {
     }
 }
 
+protobuf {
+    protoc {
+        artifact = libs.protobuf.protoc.get().toString() // Get artifact version from libs.versions.toml
+    }
+
+    // Generate java protobuf-lite for protobuf in this project
+    generateProtoTasks {
+        all().configureEach {
+            builtins {
+                try {
+                    create("java") {
+                        option("lite")
+                    }
+                } catch (_: Exception) {
+                    getByName("java") {
+                        option("lite")
+                    }
+                }
+            }
+        }
+
+    }
+}
+
 dependencies {
     ksp(libs.hilt.compiler)
     ksp(libs.androidx.room.compiler)
     implementation(libs.bundles.room.db)
 
     implementation(libs.bundles.network)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.protobuf)
+    implementation(libs.androidx.datastore)
+    implementation(libs.protobuf.javalite)
 
     implementation(libs.hilt)
     implementation(libs.hilt.navigation.compose)
@@ -68,6 +98,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.junit.android.runner)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

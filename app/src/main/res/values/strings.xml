@@ -18,4 +18,5 @@
     <string name="password_must_have_a_number">Password must have a number</string>
     <string name="password_must_have_a_lowercase">Password must have a lowercase</string>
     <string name="password_must_have_an_uppercase">Password must have an Uppercase</string>
+    <string name="accept_tos">Accept Term of Service</string>
 </resources>

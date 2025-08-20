@@ -132,12 +132,12 @@ private fun QuizOptionsPreview() {
 private fun getQuestion() : Question {
     return Question(
         id = "1",
-        text = "You fell asleep in the morning. ¿Which is the correct way to say it to your coworkers?",
+        text = "Question with options?",
         options = listOf(
-            QuestionOption(id = "1", "I fell asleep.", false),
-            QuestionOption("2", "I am going to sleep.", true),
-            QuestionOption("3", "I am sleeping.", false),
-            QuestionOption("4", "I have fallen asleep.", false)
+            QuestionOption(id = "1", "option 1.", false),
+            QuestionOption("2", "option 2.", true),
+            QuestionOption("3", "option 3.", false),
+            QuestionOption("4", "option 4.", false)
         ),
         tags = listOf("Easy", "Etiquette", "Moaning")
     )

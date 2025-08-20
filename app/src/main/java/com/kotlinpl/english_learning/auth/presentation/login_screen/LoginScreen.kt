@@ -39,8 +39,8 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.kotlinpl.english_learning.R
-import com.kotlinpl.english_learning.common.ui.EyeClosed
-import com.kotlinpl.english_learning.common.ui.EyeOpen
+import com.kotlinpl.english_learning.common.presentation.EyeClosed
+import com.kotlinpl.english_learning.common.presentation.EyeOpen
 import com.kotlinpl.english_learning.ui.theme.English_learningTheme
 
 @Composable

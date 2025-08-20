@@ -1,6 +1,7 @@
 package com.kotlinpl.english_learning.auth.presentation.register_screen
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -46,10 +48,10 @@ import androidx.compose.ui.unit.sp
 import com.kotlinpl.english_learning.R
 import com.kotlinpl.english_learning.auth.domain.PASSWORD_MIN_LENGTH
 import com.kotlinpl.english_learning.auth.domain.PasswordValidationState
-import com.kotlinpl.english_learning.common.ui.EyeClosed
-import com.kotlinpl.english_learning.common.ui.EyeOpen
 import com.kotlinpl.english_learning.ui.theme.English_learningTheme
 import androidx.compose.ui.graphics.Color
+import com.kotlinpl.english_learning.common.presentation.EyeClosed
+import com.kotlinpl.english_learning.common.presentation.EyeOpen
 
 @Composable
 fun RegisterScreen(
@@ -77,6 +79,9 @@ fun RegisterScreen(
         onRegisterClick = {
             viewModel.register()
         },
+        onTOSClick = { isAccepted ->
+            viewModel.toggleTOS(isAccepted)
+        },
         modifier = modifier
     )
 }
@@ -89,6 +94,7 @@ fun RegisterScreenStateless(
     onTogglePasswordVisibilityClick: () -> Unit, // Toggle Password Visibility
     onRegisterClick: () -> Unit, // used to handle register request
     onLoginClick: () -> Unit, // lambda to navigate to login screen
+    onTOSClick: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -190,9 +196,26 @@ fun RegisterScreenStateless(
                 .fillMaxWidth()
         )
 
+        // TOS
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            Text(stringResource(R.string.accept_tos))
+            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.spacing_s)))
+            Checkbox(
+                checked = currentUIState.acceptedTOS,
+                onCheckedChange = { onTOSClick(it) }
+            )
+        }
+
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacing_xl)))
+
+        // Register Button
         Button(
-            onClick = onLoginClick,
+            onClick = onRegisterClick,
             enabled = currentUIState.canRegister,
             modifier = Modifier
                 .fillMaxWidth()
@@ -270,6 +293,7 @@ private fun RegisterPreview() {
                 state = state.copy(isPasswordVisible = !state.isPasswordVisible)
             },
             onRegisterClick = {},
+            onTOSClick = {}
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.kotlinpl.english_learning.auth.presentation.register_screen
 
+import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,12 +29,18 @@ class RegisterViewModel @Inject constructor (
         viewModelScope.launch {
             uiState = uiState.copy(isRegistering = true)
 
-            val result = authRepository.login(
-                email = uiState.email.text,
-                password = uiState.password.text
-            )
+            try {
+                val result = authRepository.register(
+                    email = uiState.email.text,
+                    password = uiState.password.text
+                )
 
-            uiState = uiState.copy(isRegistering = false)
+                Log.d("Result Register payload", "")
+            } catch (e: Error) {
+
+            } finally {
+                uiState = uiState.copy(isRegistering = false)
+            }
         }
     }
 
@@ -41,17 +48,30 @@ class RegisterViewModel @Inject constructor (
      * UI Related tasks
      */
     fun updatePasswordTextFieldValue(newPassword: TextFieldValue) {
+        val newPasswordValue = newPassword.text
+        val newPasswordValidationState = validatePassword(newPasswordValue)
+        val isValidNewPassword = newPasswordValidationState.isValidPassword
+
         uiState = uiState.copy(
             password = newPassword,
-            passwordValidationState = validatePassword(newPassword.text),
-            canRegister = canRegister()
+            passwordValidationState = newPasswordValidationState,
+            canRegister = shouldAllowRegister(
+                email = uiState.email.text, // Current email
+                passwordIsValid = isValidNewPassword, // new password state
+                acceptedTOS = uiState.acceptedTOS
+            )
         )
     }
 
     fun updateEmailTextFieldValue(newEmail: TextFieldValue) {
+        val newEmailValue = newEmail.text
         uiState = uiState.copy(
             email = newEmail,
-            canRegister = canRegister()
+            canRegister = shouldAllowRegister(
+                email = newEmailValue, // Newly updated email
+                passwordIsValid = uiState.passwordValidationState.isValidPassword, // current password state
+                acceptedTOS = uiState.acceptedTOS
+            )
         )
     }
 
@@ -59,9 +79,25 @@ class RegisterViewModel @Inject constructor (
         uiState = uiState.copy(isPasswordVisible = !uiState.isPasswordVisible)
     }
 
-    private fun canRegister() : Boolean {
-        return Patterns.EMAIL_ADDRESS.matcher(uiState.email.text).matches() &&
-                uiState.passwordValidationState.isValidPassword
+    fun toggleTOS(isAccepted: Boolean) {
+        uiState = uiState.copy(
+            acceptedTOS = isAccepted,
+            canRegister = shouldAllowRegister(
+                email = uiState.email.text, // Current stored email
+                passwordIsValid = uiState.passwordValidationState.isValidPassword, // Current password state
+                acceptedTOS = isAccepted // Newly updated TOS this allows re rendering in UI
+            )
+        )
+    }
+
+    private fun shouldAllowRegister(
+        email: String,
+        passwordIsValid: Boolean,
+        acceptedTOS: Boolean
+    ) : Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches() &&
+                passwordIsValid &&
+                acceptedTOS
     }
 
     private fun validatePassword(password: String) : PasswordValidationState {

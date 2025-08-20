@@ -2,14 +2,19 @@ package com.kotlinpl.english_learning.auth.data.service
 
 import com.kotlinpl.english_learning.auth.data.dto.LoginResponseDto
 import retrofit2.http.POST
+import retrofit2.Response
+import retrofit2.http.Body
 
 interface AuthApiService {
-    @POST("/login")
-    suspend fun login(email: String, password: String) : LoginResponseDto
+    @POST("/auth/login")
+    suspend fun login(email: String, password: String) : Response<LoginResponseDto>
 
-    @POST("/register")
-    suspend fun register(email: String, password: String)
+    @POST("/auth/register")
+    suspend fun register(
+        @Body
+        email: String, password: String
+    )
 
-    @POST("/refresh-token")
+    @POST("/auth/refresh-token")
     suspend fun refreshToken(refreshToken: String)
 }

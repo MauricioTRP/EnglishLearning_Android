@@ -7,6 +7,7 @@ data class RegisterUIState(
     val email: TextFieldValue = TextFieldValue(),
     val isEmailValid: Boolean = false,
     val password: TextFieldValue = TextFieldValue(),
+    val acceptedTOS: Boolean = false,
     val isPasswordVisible: Boolean = false,
     val passwordValidationState: PasswordValidationState = PasswordValidationState(),
     val isRegistering: Boolean = false,

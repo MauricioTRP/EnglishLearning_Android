@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-option java_package = "com.kotlinpl.english_learning.proto";
-option java_multiple_files = true;
-
-message SessionToken {
-    optional string token = 1;
-    optional string refresh_token = 2;
-}

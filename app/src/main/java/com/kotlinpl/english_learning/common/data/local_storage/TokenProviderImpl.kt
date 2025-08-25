@@ -6,13 +6,14 @@ import com.kotlinpl.english_learning.common.domain.AuthTokens
 import com.kotlinpl.english_learning.common.domain.TokenProvider
 import com.kotlinpl.english_learning.proto.AuthTokensProto // Generated Class from auth_tokens.proto compiling
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
 /**
  * Token Provider implementation
  *
  * It'll work as the main class to Write and Read data from the Proto Datastore <AuthToken>
  */
-class TokenProviderImpl(
+class TokenProviderImpl @Inject constructor (
     private val tokenStore: DataStore<AuthTokensProto> // Same name as `Message` in `proto/auth_tokens.proto`
 ) : TokenProvider {
     override suspend fun getToken() : AuthTokens {

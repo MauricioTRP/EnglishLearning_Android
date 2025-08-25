@@ -1,11 +1,15 @@
 package com.kotlinpl.english_learning.common.domain
 
 /**
- * AuthTokens stores a pair of access token, and refresh token as part of the
+ * AuthTokens holds a pair of access token, and refresh token as part of the
  * OAuth2 authorization mechanism defined in [RFC6749](https://www.rfc-editor.org/rfc/inline-errata/rfc6749.html)
  *
  * @param accessToken - as the Access Token returned by Auth Server
  * @param refreshToken - as the Refresh Token returned by Auth Server
+ *
+ *
+ *
+ * ***Figure: Refreshing an Expired Access Token***
  *
  * ```text
  *   +--------+                                           +---------------+
@@ -29,7 +33,6 @@ package com.kotlinpl.english_learning.common.domain
  *   |        |<-(H)----------- Access Token -------------|               |
  *   +--------+           & Optional Refresh Token        +---------------+
  * ```
- *                Figure 2: Refreshing an Expired Access Token
  */
 
 data class AuthTokens(

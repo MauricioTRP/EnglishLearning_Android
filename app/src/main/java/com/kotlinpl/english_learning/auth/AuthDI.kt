@@ -9,8 +9,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -25,9 +28,14 @@ abstract class AuthDependencies {
         fun providesRetrofitInstance(
             okHttpClient: OkHttpClient
         ) : Retrofit {
+            val json = Json {
+                ignoreUnknownKeys = true
+                isLenient = true
+            }
 
             return Retrofit.Builder()
                 .client(okHttpClient)
+                .addConverterFactory(json.asConverterFactory("application/json; charset=UTF8".toMediaType()))
                 .baseUrl("http://localhost:3000/v1/")
                 .build()
         }

@@ -20,6 +20,7 @@ protobuf = "0.9.4"
 protobufJavalite = "4.26.1"
 protobufProtoc = "4.26.1"
 androidJunitRunner = "1.7.0"
+retrofitSerializationConverter = "3.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,6 +51,7 @@ kotlinx-serialization-protobuf = { group = "org.jetbrains.kotlinx", name = "kotl
 androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "protoDatastore" }
 protobuf-javalite = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobufJavalite" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobufProtoc" }
+retrofit-serialization-converter = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofitSerializationConverter" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -68,5 +70,6 @@ room-db = [
 ]
 network = [
     "okHttp",
-    "retrofit"
+    "retrofit",
+    "retrofit-serialization-converter"
 ]

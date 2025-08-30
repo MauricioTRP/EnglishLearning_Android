@@ -48,6 +48,7 @@ fun LoginScreen(
     viewModel: LoginViewModel,
     onRegisterClick: () -> Unit,
     onLoggedIn: () -> Unit,
+    showSnackbar: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     /**
@@ -71,6 +72,13 @@ fun LoginScreen(
         onRegisterClick = onRegisterClick,
         modifier = modifier
     )
+
+    /**
+     * Snackbar message in case of Login Error
+     */
+    if (viewModel.uiState.hasLoginError) {
+        showSnackbar(stringResource(R.string.login_error))
+    }
 }
 
 @Composable
@@ -105,7 +113,7 @@ fun LoginScreenStateless(
         // Annotated string to change to register form
         Text(
             buildAnnotatedString {
-                // TODO: Check how to use Material Theme default text stype as "SpanStyle"
+                // TODO: Check how to use Material Theme default text type as "SpanStyle"
                 append(stringResource(R.string.dont_have_account) + " ")
 
                 val link = LinkAnnotation.Clickable(

@@ -39,3 +39,18 @@ sealed interface AuthScreens{
             get() = "register"
     }
 }
+
+/**
+ * Quizzes Screens
+ */
+sealed interface QuizzesScreens{
+    data object Root : QuizzesScreens, Screen {
+        override val route: String
+            get() = "quizzes_root"
+    }
+
+    data object QuizList : QuizzesScreens, Screen {
+        override val route: String
+            get() = "quiz_list"
+    }
+}

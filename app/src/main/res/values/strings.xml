@@ -20,4 +20,5 @@
     <string name="password_must_have_an_uppercase">Password must have an Uppercase</string>
     <string name="accept_tos">Accept Term of Service</string>
     <string name="registration_error">There was an error on registration</string>
+    <string name="login_error">An error ocurred when login, please try again</string>
 </resources>

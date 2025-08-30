@@ -7,12 +7,15 @@ import com.kotlinpl.english_learning.auth.data.dto.RegisterRequestDto
 import com.kotlinpl.english_learning.auth.data.dto.RegisterResponseDto
 import com.kotlinpl.english_learning.auth.data.service.AuthApiService
 import com.kotlinpl.english_learning.auth.domain.AuthRepository
+import com.kotlinpl.english_learning.common.domain.AuthTokens
+import com.kotlinpl.english_learning.common.domain.TokenProvider
 import javax.inject.Inject
 
 const val TAG = "AuthRepositoryImpl"
 
 class AuthRepositoryImpl @Inject constructor (
-    private val authApiService: AuthApiService
+    private val authApiService: AuthApiService,
+    private val tokenProvider: TokenProvider, // authToken to store on a proto datastore the auth and refresh tokens for the very first time
 ) : AuthRepository {
     override suspend fun login(
         email: String,
@@ -46,16 +49,31 @@ class AuthRepositoryImpl @Inject constructor (
 
     override suspend fun register(
         email: String,
-        password: String
+        password: String,
+        acceptedTerms: Boolean
     ) : Result<RegisterResponseDto>  {
         return try {
             val response = authApiService.register(
-                RegisterRequestDto(email = email, password = password)
+                RegisterRequestDto(
+                    email = email, password = password, acceptTerms = acceptedTerms)
             )
 
             if (response.isSuccessful) {
                 response.body()?.let { registerData ->
                     Log.d(TAG, registerData.toString())
+                    /**
+                     * Store the token locally
+                     */
+                    tokenProvider.setToken(
+                        AuthTokens(
+                            accessToken = registerData.data.token,
+                            refreshToken = registerData.data.refreshToken
+                        )
+                    )
+
+                    /**
+                     * Return result to be used by ViewModel
+                     */
                     Result.success(registerData)
                 } ?: Result.failure(Exception("Register was successful, but response body was null"))
             } else {

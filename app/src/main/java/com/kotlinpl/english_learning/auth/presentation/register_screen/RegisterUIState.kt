@@ -12,5 +12,6 @@ data class RegisterUIState(
     val passwordValidationState: PasswordValidationState = PasswordValidationState(),
     val isRegistering: Boolean = false,
     val canRegister: Boolean = false,
-    val hasRegisterError: Boolean = false
+    val hasRegisterError: Boolean = false,
+    val isLoggedIn: Boolean = false
 )

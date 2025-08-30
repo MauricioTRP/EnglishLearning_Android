@@ -3,6 +3,7 @@ package com.kotlinpl.english_learning.common.data.network
 import okhttp3.Authenticator
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Inject
 
 /**
@@ -18,7 +19,17 @@ class HttpClientFactory @Inject constructor (
     private val authorization: Interceptor
 ) {
     fun build() : OkHttpClient {
+        /**
+         * Used to log info to network inspector
+         *
+         * You can check this [StackOverflow post](https://stackoverflow.com/questions/37105278/httplogginginterceptor-not-logging-with-retrofit-2)
+         * and check [Maven Repository](https://mvnrepository.com/artifact/com.squareup.okhttp3/logging-interceptor)
+         * for more information
+         */
+        val logginInterceptor = HttpLoggingInterceptor()
+
         return OkHttpClient.Builder()
+            .addNetworkInterceptor(logginInterceptor)
             .addInterceptor { chain ->
                 val originalRequest = chain.request()
                 val request = originalRequest.newBuilder()

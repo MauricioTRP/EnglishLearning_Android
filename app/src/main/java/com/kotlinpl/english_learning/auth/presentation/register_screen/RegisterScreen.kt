@@ -97,6 +97,13 @@ fun RegisterScreen(
     if (viewModel.uiState.hasRegisterError) {
        showSnackbar(stringResource(R.string.registration_error))
     }
+
+    /**
+     * Navigate in case of successful registration
+     */
+    if(viewModel.uiState.isLoggedIn) {
+        onLoggedIn()
+    }
 }
 
 @Composable

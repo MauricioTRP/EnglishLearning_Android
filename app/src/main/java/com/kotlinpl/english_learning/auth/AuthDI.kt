@@ -3,6 +3,7 @@ package com.kotlinpl.english_learning.auth
 import com.kotlinpl.english_learning.auth.data.AuthRepositoryImpl
 import com.kotlinpl.english_learning.auth.data.service.AuthApiService
 import com.kotlinpl.english_learning.auth.domain.AuthRepository
+import com.kotlinpl.english_learning.common.data.network.ApiConfig
 import com.kotlinpl.english_learning.common.data.network.HttpClientFactory
 import dagger.Binds
 import dagger.Module
@@ -35,8 +36,8 @@ abstract class AuthDependencies {
 
             return Retrofit.Builder()
                 .client(okHttpClient)
-                .addConverterFactory(json.asConverterFactory("application/json; charset=UTF8".toMediaType()))
-                .baseUrl("http://localhost:3000/v1/")
+                .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+                .baseUrl(ApiConfig.BASE_URL)
                 .build()
         }
 

@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.kotlinpl.english_learning.MainViewModel
+import com.kotlinpl.english_learning.quizzes.presentation.QuizzesViewModel
 import com.kotlinpl.english_learning.quizzes.domain.QuestionOption
 import com.kotlinpl.english_learning.quizzes.domain.Question
 import com.kotlinpl.english_learning.ui.common.ErrorScreen
@@ -32,7 +32,7 @@ import com.kotlinpl.english_learning.ui.theme.English_learningTheme
 @Composable
 fun QuestionWithOptionComposable(
     onSubmitAnswer: () -> Unit,
-    mainViewModel: MainViewModel,
+    mainViewModel: QuizzesViewModel,
     modifier: Modifier = Modifier,
 ) {
     val questionUiState by mainViewModel.quizUiState.collectAsState()

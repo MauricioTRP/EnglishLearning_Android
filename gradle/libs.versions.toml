@@ -21,6 +21,7 @@ protobufJavalite = "4.26.1"
 protobufProtoc = "4.26.1"
 androidJunitRunner = "1.7.0"
 retrofitSerializationConverter = "3.0.0"
+loggingInterceptor = "5.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -52,6 +53,7 @@ androidx-datastore = { group = "androidx.datastore", name = "datastore", version
 protobuf-javalite = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobufJavalite" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobufProtoc" }
 retrofit-serialization-converter = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofitSerializationConverter" }
+http-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "loggingInterceptor" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -71,5 +73,6 @@ room-db = [
 network = [
     "okHttp",
     "retrofit",
-    "retrofit-serialization-converter"
+    "retrofit-serialization-converter",
+    "http-logging-interceptor"
 ]

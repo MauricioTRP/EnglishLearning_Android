@@ -1,5 +1,6 @@
 package com.kotlinpl.english_learning.auth.presentation.login_screen
 
+import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,6 +13,8 @@ import com.kotlinpl.english_learning.auth.domain.PASSWORD_MIN_LENGTH
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+const val TAG = "LoginViewModel"
 
 @HiltViewModel
 class LoginViewModel @Inject constructor (
@@ -27,12 +30,34 @@ class LoginViewModel @Inject constructor (
         viewModelScope.launch {
             uiState = uiState.copy(isLoggingIn = true) // Update UI State to show user Login Process
 
-            val result = authRepository.login(
-                email = uiState.email.text,
-                password = uiState.password.text
-            )
+            try {
+                val result = authRepository.login(
+                    email = uiState.email.text,
+                    password = uiState.password.text
+                )
 
-            uiState = uiState.copy(isLoggingIn = false)
+                result.fold(
+                    onSuccess = { loginResponseDto ->
+                        /**
+                         * Handle successful operations
+                         */
+                        Log.d(TAG, loginResponseDto.toString())
+                    },
+                    onFailure = { failure ->
+                        /**
+                         * Handle failure operations
+                         */
+                        Log.e(TAG, failure.message ?: "Unknown failure")
+                        uiState = uiState.copy(hasLoginError = true)
+                    }
+                )
+            } catch (e: Error) {
+                Log.d("ViewModel Login", e.message.toString())
+                uiState = uiState.copy(hasLoginError = true)
+            } finally {
+                uiState = uiState.copy(isLoggingIn = false)
+            }
+
         }
     }
 

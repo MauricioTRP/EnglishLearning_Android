@@ -36,7 +36,8 @@ class RegisterViewModel @Inject constructor (
 
                 val result = authRepository.register(
                     email = uiState.email.text,
-                    password = uiState.password.text
+                    password = uiState.password.text,
+                    acceptedTerms = uiState.acceptedTOS
                 )
 
                 result.fold(
@@ -45,6 +46,7 @@ class RegisterViewModel @Inject constructor (
                          * Handle successful operations
                          */
                         Log.d(TAG, response.toString())
+                        uiState = uiState.copy(isLoggedIn = true)
                     },
                     onFailure = { failure ->
                         /**
@@ -57,6 +59,7 @@ class RegisterViewModel @Inject constructor (
                 )
             } catch (e: Error) {
                 Log.d("ViewModel Register", e.message.toString())
+                uiState = uiState.copy(hasRegisterError = true)
             } finally {
                 uiState = uiState.copy(isRegistering = false)
             }

@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.kotlinpl.english_learning.auth.presentation.login_screen.LoginScreen
 import com.kotlinpl.english_learning.auth.presentation.register_screen.RegisterScreen
+import com.kotlinpl.english_learning.quizzes.presentation.QuizzesScreen
 
 @Composable
 fun NavigationComposable(
@@ -28,6 +29,12 @@ fun NavigationComposable(
         startDestination = AuthScreens.Root.route
     ) {
         authGraph(
+            navController = navController,
+            showSnackbar = showSnackbar,
+            modifier = modifier
+        )
+
+        quizzesGraph(
             navController = navController,
             showSnackbar = showSnackbar,
             modifier = modifier
@@ -80,6 +87,7 @@ private fun NavGraphBuilder.authGraph(
                 onLoggedIn = {
                     Log.d("NavGraph", "Successfully logged in")
                 },
+                showSnackbar = showSnackbar,
                 modifier = modifier,
             )
         }
@@ -94,8 +102,27 @@ private fun NavGraphBuilder.authGraph(
                 onLoginClick = {
                     navController.navigate(AuthScreens.Login.route)
                 },
-                onLoggedIn = {}, // used to navigate main screen
+                onLoggedIn = {
+                    Log.d("NavGraph", "Successfully logged in")
+                    navController.navigate(QuizzesScreens.QuizList.route)
+                }, // used to navigate main screen
                 showSnackbar = showSnackbar,
+                modifier = modifier
+            )
+        }
+
+    }
+}
+
+private fun NavGraphBuilder.quizzesGraph(
+    navController: NavController,
+    showSnackbar: (String) -> Unit,
+    modifier: Modifier
+) {
+    navigation(startDestination = QuizzesScreens.QuizList.route, route = QuizzesScreens.Root.route) {
+        composable(route = QuizzesScreens.QuizList.route) {
+            QuizzesScreen(
+                viewModel = hiltViewModel(),
                 modifier = modifier
             )
         }

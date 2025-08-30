@@ -1,5 +1,6 @@
 package com.kotlinpl.english_learning.auth.presentation.register_screen
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,12 +22,15 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,12 +56,14 @@ import com.kotlinpl.english_learning.ui.theme.English_learningTheme
 import androidx.compose.ui.graphics.Color
 import com.kotlinpl.english_learning.common.presentation.EyeClosed
 import com.kotlinpl.english_learning.common.presentation.EyeOpen
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(
     viewModel: RegisterViewModel,
     onLoginClick: () -> Unit, // used for navigation
     onLoggedIn: () -> Unit,
+    showSnackbar: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     /**
@@ -84,6 +90,13 @@ fun RegisterScreen(
         },
         modifier = modifier
     )
+
+    /**
+     * Snackbar message in case of Register Error
+     */
+    if (viewModel.uiState.hasRegisterError) {
+       showSnackbar(stringResource(R.string.registration_error))
+    }
 }
 
 @Composable
@@ -94,7 +107,7 @@ fun RegisterScreenStateless(
     onTogglePasswordVisibilityClick: () -> Unit, // Toggle Password Visibility
     onRegisterClick: () -> Unit, // used to handle register request
     onLoginClick: () -> Unit, // lambda to navigate to login screen
-    onTOSClick: (Boolean) -> Unit,
+    onTOSClick: (Boolean) -> Unit, // Handle accepted terms and conditions
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -125,7 +138,7 @@ fun RegisterScreenStateless(
                 val link = LinkAnnotation.Clickable(
                     tag = stringResource(R.string.login),
                     linkInteractionListener = {
-                        onRegisterClick()
+                        onLoginClick()
                     },
                     styles = TextLinkStyles(SpanStyle(color = MaterialTheme.colorScheme.primary))
                 )

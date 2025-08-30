@@ -20,13 +20,18 @@ import com.kotlinpl.english_learning.auth.presentation.register_screen.RegisterS
 fun NavigationComposable(
     navController: NavHostController, // NavController is created in MainActivity
     isLoggedIn: Boolean, // Check if the user have started a session
+    showSnackbar: (String) -> Unit, // Lambda to show a snackbar message
     modifier: Modifier = Modifier // Modifier to be used inside Scaffold of MainActivity
 ) {
     NavHost(
         navController = navController,
         startDestination = AuthScreens.Root.route
     ) {
-        authGraph(navController, modifier)
+        authGraph(
+            navController = navController,
+            showSnackbar = showSnackbar,
+            modifier = modifier
+        )
     }
 }
 
@@ -34,8 +39,13 @@ fun NavigationComposable(
  * `NavGraphBuilder.authGraph` works like a navController only to `auth` module
  *
  * @param navController - is passed the same navController that MainActivity uses
+ * @param showSnackbar - is passed the same showSnackbar that MainActivity uses
  */
-private fun NavGraphBuilder.authGraph(navController: NavController, modifier: Modifier) {
+private fun NavGraphBuilder.authGraph(
+    navController: NavController,
+    showSnackbar: (String) -> Unit,
+    modifier: Modifier
+) {
     navigation(
         startDestination = AuthScreens.Intro.route,
         route = AuthScreens.Root.route
@@ -85,6 +95,7 @@ private fun NavGraphBuilder.authGraph(navController: NavController, modifier: Mo
                     navController.navigate(AuthScreens.Login.route)
                 },
                 onLoggedIn = {}, // used to navigate main screen
+                showSnackbar = showSnackbar,
                 modifier = modifier
             )
         }

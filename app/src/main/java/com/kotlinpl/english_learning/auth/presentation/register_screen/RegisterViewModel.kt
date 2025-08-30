@@ -15,6 +15,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val TAG = "RegisterViewModel"
+
 @HiltViewModel
 class RegisterViewModel @Inject constructor (
     private val authRepository: AuthRepository
@@ -30,14 +32,31 @@ class RegisterViewModel @Inject constructor (
             uiState = uiState.copy(isRegistering = true)
 
             try {
+                Log.d(TAG, "email: ${uiState.email.text} - password: ${uiState.password.text}")
+
                 val result = authRepository.register(
                     email = uiState.email.text,
                     password = uiState.password.text
                 )
 
-                Log.d("Result Register payload", "")
+                result.fold(
+                    onSuccess = { response ->
+                        /**
+                         * Handle successful operations
+                         */
+                        Log.d(TAG, response.toString())
+                    },
+                    onFailure = { failure ->
+                        /**
+                         * Handle failure operations
+                         * TODO: Delete hardcoded messages
+                         */
+                        Log.e(TAG, failure.message ?: "Unknown failure")
+                        uiState = uiState.copy(hasRegisterError = true)
+                    }
+                )
             } catch (e: Error) {
-
+                Log.d("ViewModel Register", e.message.toString())
             } finally {
                 uiState = uiState.copy(isRegistering = false)
             }

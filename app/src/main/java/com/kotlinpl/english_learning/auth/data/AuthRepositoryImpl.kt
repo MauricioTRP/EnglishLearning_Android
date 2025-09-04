@@ -32,7 +32,15 @@ class AuthRepositoryImpl @Inject constructor (
 
             if (response.isSuccessful) {
                 response.body()?.let { loginData ->
-                    Log.e(TAG, loginData.toString())
+                    // Need to store Access Token and Refresh Token
+                    tokenProvider.setToken(
+                        AuthTokens(
+                            accessToken = loginData.data.token,
+                            refreshToken = loginData.data.refreshToken
+                        )
+                    )
+
+                    Log.d(TAG, "Login successful")
                     Result.success(loginData) // loginData is non-null here
                 } ?: Result.failure(Exception("Login successful but response body was null."))
             } else {

@@ -26,30 +26,8 @@ abstract class AuthDependencies {
     companion object {
         @Provides
         @Singleton
-        fun providesRetrofitInstance(
-            okHttpClient: OkHttpClient
-        ) : Retrofit {
-            val json = Json {
-                ignoreUnknownKeys = true
-                isLenient = true
-            }
-
-            return Retrofit.Builder()
-                .client(okHttpClient)
-                .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-                .baseUrl(ApiConfig.BASE_URL)
-                .build()
-        }
-
-        @Provides
-        @Singleton
         fun provideApiAuthService(retrofit: Retrofit) : AuthApiService {
             return retrofit.create(AuthApiService::class.java)
         }
-
-        @Provides
-        @Singleton
-        fun provideOkHttpClient(httpClientFactory: HttpClientFactory) : OkHttpClient =
-            httpClientFactory.build()
     }
 }

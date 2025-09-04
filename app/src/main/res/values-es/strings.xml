@@ -22,4 +22,5 @@
     <string name="accept_tos">Aceptar términos de servicio</string>
     <string name="registration_error">Hubo un error en el registro</string>
     <string name="login_error">Hubo un error al inicio de sesión, inténtalo más tarde</string>
+    <string name="registration_successful">Registro Exitoso!</string>
 </resources>

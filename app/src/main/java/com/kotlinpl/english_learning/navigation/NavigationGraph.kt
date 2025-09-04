@@ -82,7 +82,13 @@ private fun NavGraphBuilder.authGraph(
             LoginScreen(
                 viewModel = hiltViewModel(),
                 onRegisterClick = { // Navigates to Register Composable
-                    navController.navigate(AuthScreens.Register.route)
+                    navController.navigate(AuthScreens.Register.route) {
+                        popUpTo(AuthScreens.Login.route) {
+                            inclusive = true
+                            saveState = true
+                        }
+                        restoreState = true
+                    }
                 },
                 onLoggedIn = {
                     Log.d("NavGraph", "Successfully logged in")
@@ -100,12 +106,17 @@ private fun NavGraphBuilder.authGraph(
             RegisterScreen(
                 viewModel = hiltViewModel(),
                 onLoginClick = {
-                    navController.navigate(AuthScreens.Login.route)
+                    navController.navigate(AuthScreens.Login.route) {
+                        popUpTo(AuthScreens.Register.route) {
+                            inclusive = true
+                            saveState = true
+                        }
+                        restoreState = true
+                    }
                 },
                 onLoggedIn = {
-                    Log.d("NavGraph", "Successfully logged in")
                     navController.navigate(QuizzesScreens.QuizList.route)
-                }, // used to navigate main screen
+                },
                 showSnackbar = showSnackbar,
                 modifier = modifier
             )

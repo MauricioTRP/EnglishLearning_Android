@@ -42,6 +42,7 @@ class LoginViewModel @Inject constructor (
                          * Handle successful operations
                          */
                         Log.d(TAG, loginResponseDto.toString())
+                        uiState = uiState.copy(isLoggedIn = true)
                     },
                     onFailure = { failure ->
                         /**

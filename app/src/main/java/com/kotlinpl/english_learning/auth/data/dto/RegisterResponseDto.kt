@@ -11,14 +11,14 @@ import kotlinx.serialization.Serializable
  */
 
 @Serializable
-data class RegisterDataResponseDto(
-    val user: UserDataDto,
-    val token: String,
+data class RegisterResponseDto(
+    val user: UserDataDto? = null,
+    val accessToken: String,
     val refreshToken: String
 )
 
-@Serializable
-data class RegisterResponseDto(
-    val success: Boolean,
-    val data: RegisterDataResponseDto
-)
+//@Serializable
+//data class RegisterResponseDto(
+//    val success: Boolean,
+//    val data: RegisterDataResponseDto
+//)

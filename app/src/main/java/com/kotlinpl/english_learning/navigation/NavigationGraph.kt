@@ -92,6 +92,7 @@ private fun NavGraphBuilder.authGraph(
                 },
                 onLoggedIn = {
                     Log.d("NavGraph", "Successfully logged in")
+                    navController.navigate(QuizzesScreens.QuizList.route)
                 },
                 showSnackbar = showSnackbar,
                 modifier = modifier,

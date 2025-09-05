@@ -79,6 +79,14 @@ fun LoginScreen(
     if (viewModel.uiState.hasLoginError) {
         showSnackbar(stringResource(R.string.login_error))
     }
+
+    /**
+     * Navigate in case of successful login
+     */
+    if(viewModel.uiState.isLoggedIn) {
+        showSnackbar(stringResource(R.string.login_successful))
+        onLoggedIn()
+    }
 }
 
 @Composable

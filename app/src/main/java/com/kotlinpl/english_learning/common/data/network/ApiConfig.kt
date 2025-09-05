@@ -5,6 +5,6 @@ package com.kotlinpl.english_learning.common.data.network
  *
  */
 object ApiConfig {
-    const val BASE_URL = "http://10.0.2.2:3000/v1/" // to fetch server running on local machine, hosting both server and emulator
+    const val BASE_URL = "http://10.0.2.2:8889/api/" // to fetch server running on local machine, hosting both server and emulator
     const val AUTH_BASE_PATH = "auth"
 }

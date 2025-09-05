@@ -11,18 +11,18 @@ import retrofit2.http.Body
 
 interface AuthApiService {
     // TODO: Check why is necessary to use /v1 if it's also set at ApiConfig
-    @POST("/v1/auth/login")
+    @POST("/api/login")
     suspend fun login(
         @Body
         loginRequestDto: LoginRequestDto
     ) : Response<LoginResponseDto>
 
-    @POST("/v1/auth/register")
+    @POST("/api/register")
     suspend fun register(
         @Body
         registerRequestDto: RegisterRequestDto
     ) : Response<RegisterResponseDto>
 
-    @POST("/v1/auth/refresh-token")
+    @POST("/api/refresh-token")
     suspend fun refreshToken(refreshToken: String) : Response<RefreshTokenResponseDto>
 }

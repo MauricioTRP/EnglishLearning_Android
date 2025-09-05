@@ -35,8 +35,8 @@ class AuthRepositoryImpl @Inject constructor (
                     // Need to store Access Token and Refresh Token
                     tokenProvider.setToken(
                         AuthTokens(
-                            accessToken = loginData.data.token,
-                            refreshToken = loginData.data.refreshToken
+                            accessToken = loginData.accessToken,
+                            refreshToken = loginData.refreshToken
                         )
                     )
 
@@ -74,8 +74,8 @@ class AuthRepositoryImpl @Inject constructor (
                      */
                     tokenProvider.setToken(
                         AuthTokens(
-                            accessToken = registerData.data.token,
-                            refreshToken = registerData.data.refreshToken
+                            accessToken = registerData.accessToken,
+                            refreshToken = registerData.refreshToken
                         )
                     )
 

@@ -8,5 +8,6 @@ data class LoginUIState(
     val isPasswordVisible: Boolean = false,
     val canLogin: Boolean = false,
     val hasLoginError: Boolean = false,
-    val isLoggingIn: Boolean = false
+    val isLoggingIn: Boolean = false,
+    val isLoggedIn: Boolean = false
 )

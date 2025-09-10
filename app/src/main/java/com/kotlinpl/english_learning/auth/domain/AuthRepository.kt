@@ -6,4 +6,5 @@ import com.kotlinpl.english_learning.auth.data.dto.RegisterResponseDto
 interface AuthRepository {
     suspend fun login(email: String, password: String) : Result<LoginResponseDto>
     suspend fun register(email: String, password: String, acceptedTerms: Boolean) : Result<RegisterResponseDto>
+    suspend fun restoreSession() : Result<Unit>
 }

@@ -27,6 +27,7 @@ class LoginViewModel @Inject constructor (
      * Function to trigger login request
      */
     fun login() {
+        Log.d(TAG, "Login button clicked")
         viewModelScope.launch {
             uiState = uiState.copy(isLoggingIn = true) // Update UI State to show user Login Process
 

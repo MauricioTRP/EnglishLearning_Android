@@ -1,4 +1,4 @@
-package com.kotlinpl.english_learning.auth.data.dto
+package com.kotlinpl.english_learning.common.data.network.dto
 
 import kotlinx.serialization.Serializable
 

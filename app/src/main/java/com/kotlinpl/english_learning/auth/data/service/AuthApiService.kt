@@ -2,7 +2,8 @@ package com.kotlinpl.english_learning.auth.data.service
 
 import com.kotlinpl.english_learning.auth.data.dto.LoginRequestDto
 import com.kotlinpl.english_learning.auth.data.dto.LoginResponseDto
-import com.kotlinpl.english_learning.auth.data.dto.RefreshTokenResponseDto
+import com.kotlinpl.english_learning.common.data.network.dto.RefreshTokenRequestDto
+import com.kotlinpl.english_learning.common.data.network.dto.RefreshTokenResponseDto
 import com.kotlinpl.english_learning.auth.data.dto.RegisterRequestDto
 import com.kotlinpl.english_learning.auth.data.dto.RegisterResponseDto
 import retrofit2.http.POST
@@ -24,5 +25,8 @@ interface AuthApiService {
     ) : Response<RegisterResponseDto>
 
     @POST("/api/refresh-token")
-    suspend fun refreshToken(refreshToken: String) : Response<RefreshTokenResponseDto>
+    suspend fun refreshToken(
+        @Body
+        refreshToken: RefreshTokenRequestDto
+    ) : Response<RefreshTokenResponseDto>
 }

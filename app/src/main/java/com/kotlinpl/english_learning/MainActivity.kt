@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -12,16 +13,27 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.kotlinpl.english_learning.navigation.NavigationComposable
 import com.kotlinpl.english_learning.ui.theme.English_learningTheme
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    val viewModel: MainViewModel by viewModels<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                viewModel.state.isCheckingAuth
+            }
+        }
+
         enableEdgeToEdge()
         setContent {
             English_learningTheme {
@@ -43,7 +55,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavigationComposable(
                         navController = navController,
-                        isLoggedIn = true, // TODO change hardcoded isLoggedIn flag
+                        isLoggedIn = viewModel.state.isLoggedIn, // TODO: check if user is logged in using viewModel
                         showSnackbar = showSnackbar,
                         modifier = Modifier.padding(innerPadding)
                     )

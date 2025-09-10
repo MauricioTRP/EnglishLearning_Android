@@ -26,7 +26,7 @@ fun NavigationComposable(
 ) {
     NavHost(
         navController = navController,
-        startDestination = AuthScreens.Root.route
+        startDestination = if(!isLoggedIn) AuthScreens.Root.route else QuizzesScreens.Root.route
     ) {
         authGraph(
             navController = navController,

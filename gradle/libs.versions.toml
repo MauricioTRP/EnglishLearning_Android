@@ -22,6 +22,7 @@ protobufProtoc = "4.26.1"
 androidJunitRunner = "1.7.0"
 retrofitSerializationConverter = "3.0.0"
 loggingInterceptor = "5.1.0"
+splashscreen = "1.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,6 +55,7 @@ protobuf-javalite = { group = "com.google.protobuf", name = "protobuf-javalite",
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobufProtoc" }
 retrofit-serialization-converter = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofitSerializationConverter" }
 http-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "loggingInterceptor" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,5 +1,6 @@
 package com.kotlinpl.english_learning.auth.presentation.login_screen
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -64,6 +65,7 @@ fun LoginScreen(
             viewModel.updateEmailTextFieldValue(newValue)
         },
         onLoginClick = {
+            Log.d("LoginScreen", "Login Clicked")
             viewModel.login()
         },
         onTogglePasswordVisibilityClick = {

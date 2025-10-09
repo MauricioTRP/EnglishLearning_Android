@@ -22,11 +22,12 @@ fun NavigationComposable(
     navController: NavHostController, // NavController is created in MainActivity
     isLoggedIn: Boolean, // Check if the user have started a session
     showSnackbar: (String) -> Unit, // Lambda to show a snackbar message
+    haveDoneOnboarding: Boolean, // Check if user have already done onboarding
     modifier: Modifier = Modifier // Modifier to be used inside Scaffold of MainActivity
 ) {
     NavHost(
         navController = navController,
-        startDestination = if(!isLoggedIn) AuthScreens.Root.route else QuizzesScreens.Root.route
+        startDestination = checkInitialRoute(isLoggedIn, haveDoneOnboarding)
     ) {
         authGraph(
             navController = navController,
@@ -35,6 +36,12 @@ fun NavigationComposable(
         )
 
         quizzesGraph(
+            navController = navController,
+            showSnackbar = showSnackbar,
+            modifier = modifier
+        )
+
+        onboardingGraph(
             navController = navController,
             showSnackbar = showSnackbar,
             modifier = modifier
@@ -139,5 +146,45 @@ private fun NavGraphBuilder.quizzesGraph(
             )
         }
 
+    }
+}
+
+private fun NavGraphBuilder.onboardingGraph(
+    navController: NavController,
+    showSnackbar: (String) -> Unit,
+    modifier: Modifier
+) {
+    navigation(startDestination = OnboardingScreens.OnboardingJourneyScreen.route, route = OnboardingScreens.Root.route) {
+        composable(route = OnboardingScreens.OnboardingJourneyScreen.route) {
+            Button(
+                onClick = {
+                    navController.navigate(
+                        QuizzesScreens.QuizList.route
+                    )
+                },
+                modifier = modifier
+            ) {
+                Text("Onboarding")
+            }
+        }
+    }
+}
+
+/**
+ * Check where the user must start the navigation route.
+ * Analyses the logged in status as well as the onboarding status
+ *
+ * @return [String] instance, representing the actual route
+ */
+private fun checkInitialRoute(
+    isLoggedIn: Boolean,
+    haveDoneOnboarding: Boolean
+) : String {
+    return if (!isLoggedIn) {
+        AuthScreens.Root.route
+    } else if (!haveDoneOnboarding){
+        OnboardingScreens.Root.route
+    } else {
+        QuizzesScreens.QuizList.route
     }
 }

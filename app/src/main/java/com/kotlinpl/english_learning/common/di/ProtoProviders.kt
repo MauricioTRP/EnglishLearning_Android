@@ -3,13 +3,17 @@ package com.kotlinpl.english_learning.common.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
+import com.kotlinpl.english_learning.common.data.local_storage.OnboardingCheckerImpl
 import com.kotlinpl.english_learning.common.data.local_storage.TokenProviderImpl
 import com.kotlinpl.english_learning.common.domain.AuthTokensProtoSerializer
+import com.kotlinpl.english_learning.common.domain.OnboardingChecker
+import com.kotlinpl.english_learning.common.domain.OnboardingFlagSerializer
 import com.kotlinpl.english_learning.common.domain.TokenProvider
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import com.kotlinpl.english_learning.proto.AuthTokensProto
+import com.kotlinpl.english_learning.proto.OnboardingFlagProto
 import dagger.Binds
 import dagger.Provides
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -25,6 +29,13 @@ abstract class DataDependencies {
     @Singleton
     abstract fun bindTokenProvider(impl: TokenProviderImpl) : TokenProvider
 
+    /**
+     * Binding between `OnboardingChecker` and `OnboardingCheckerImpl`
+     */
+    @Binds
+    @Singleton
+    abstract fun bindOnboardingChecker(impl: OnboardingCheckerImpl) : OnboardingChecker
+
     companion object {
         /**
          * proto stores reading from .proto files
@@ -32,6 +43,15 @@ abstract class DataDependencies {
         private val Context.sessionTokenStore: DataStore<AuthTokensProto> by dataStore<AuthTokensProto>(
             fileName = "session_token.pb",
             serializer = AuthTokensProtoSerializer
+        )
+
+
+        /**
+         * Onboarding flag token from .proto file
+         */
+        private val Context.onboardingFlag: DataStore<OnboardingFlagProto> by dataStore<OnboardingFlagProto>(
+            fileName = "onboarding_flag.pb",
+            serializer = OnboardingFlagSerializer
         )
 
         /**
@@ -44,5 +64,14 @@ abstract class DataDependencies {
         ): DataStore<AuthTokensProto> {
             return context.sessionTokenStore
         }
+
+        /**
+         * Dependency provider for Onboarding DataStore
+         */
+        @Provides
+        @Singleton
+        fun provideOnboardingFlagStore(
+            @ApplicationContext context: Context
+        ): DataStore<OnboardingFlagProto> = context.onboardingFlag
     }
 }

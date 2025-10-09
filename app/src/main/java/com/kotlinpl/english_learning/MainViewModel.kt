@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kotlinpl.english_learning.auth.domain.AuthRepository
+import com.kotlinpl.english_learning.common.domain.OnboardingChecker
 import com.kotlinpl.english_learning.common.domain.TokenProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -19,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor (
     private val tokenProvider: TokenProvider,
+    private val onboardingChecker: OnboardingChecker
 ) : ViewModel()  {
     var state by mutableStateOf(MainState())
         private set
@@ -35,7 +36,17 @@ class MainViewModel @Inject constructor (
                 val token = tokenProvider.getToken()
                 Log.d("MainViewModel", "Token: ${token?.accessToken}")
 
-                state = state.copy(isLoggedIn = !token?.accessToken.isNullOrEmpty())
+
+                /**
+                 * Check if user have done onboarding before
+                 */
+                val haveDoneOnboarding = onboardingChecker.getOnboardingFlag()
+
+                state = state.copy(
+                    isLoggedIn = !token?.accessToken.isNullOrEmpty(),
+                    haveDoneOnboarding = haveDoneOnboarding.haveDoneOnboarding
+                )
+
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {

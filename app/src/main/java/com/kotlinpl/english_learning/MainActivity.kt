@@ -14,12 +14,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.kotlinpl.english_learning.navigation.NavigationComposable
 import com.kotlinpl.english_learning.ui.theme.English_learningTheme
 import dagger.hilt.android.AndroidEntryPoint
-import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -55,8 +53,9 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavigationComposable(
                         navController = navController,
-                        isLoggedIn = viewModel.state.isLoggedIn, // TODO: check if user is logged in using viewModel
+                        isLoggedIn = viewModel.state.isLoggedIn,
                         showSnackbar = showSnackbar,
+                        haveDoneOnboarding = viewModel.state.haveDoneOnboarding,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

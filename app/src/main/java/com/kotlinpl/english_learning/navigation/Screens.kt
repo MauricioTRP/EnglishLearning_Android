@@ -54,3 +54,18 @@ sealed interface QuizzesScreens{
             get() = "quiz_list"
     }
 }
+
+/**
+ * Onboarding Screens
+ */
+sealed interface OnboardingScreens {
+    data object Root : OnboardingScreens, Screen {
+        override val route: String
+            get() = "onboarding_root"
+    }
+
+    data object OnboardingJourneyScreen : OnboardingScreens, Screen {
+        override val route: String
+            get() = "onboarding_journey"
+    }
+}

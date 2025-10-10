@@ -1,17 +1,14 @@
 package com.kotlinpl.english_learning.common.di
 
-import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
 import com.kotlinpl.english_learning.common.data.network.ApiConfig
 import com.kotlinpl.english_learning.common.data.network.AuthenticatorInterceptor
 import com.kotlinpl.english_learning.common.data.network.AuthorizationInterceptor
+import com.kotlinpl.english_learning.common.data.network.ExponentialBackoffInterceptor
 import com.kotlinpl.english_learning.common.data.network.HttpClientFactory
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.Authenticator
@@ -36,7 +33,6 @@ abstract class HttpClientModule {
      */
     @Binds
     abstract fun bindsAuthorization(authorizationInterceptor: AuthorizationInterceptor) : Interceptor
-
     companion object {
         /**
          * Retrofit Instance
@@ -65,5 +61,14 @@ abstract class HttpClientModule {
         @Singleton
         fun provideOkHttpClient(httpClientFactory: HttpClientFactory) : OkHttpClient =
             httpClientFactory.build()
+
+        /**
+         * Provide [ExponentialBackoffInterceptor]
+         */
+        @Provides
+        @Singleton
+        fun provideExponentialBackoffInterceptor() : ExponentialBackoffInterceptor =
+            ExponentialBackoffInterceptor()
+
     }
 }

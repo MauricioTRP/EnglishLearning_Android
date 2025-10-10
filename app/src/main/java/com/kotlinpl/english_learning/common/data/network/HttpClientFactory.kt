@@ -13,10 +13,12 @@ import javax.inject.Inject
  *
  * @param authenticator is responsible for refreshing auth tokens
  * @param authorization is responsible of adding Bearer token on each request
+ * @param exponentialBackoffInterceptor is responsible of retrying failed requests
  */
 class HttpClientFactory @Inject constructor (
     private val authenticator: Authenticator,
-    private val authorization: Interceptor
+    private val authorization: Interceptor,
+    private val exponentialBackoffInterceptor: ExponentialBackoffInterceptor
 ) {
     fun build() : OkHttpClient {
         /**
@@ -29,6 +31,7 @@ class HttpClientFactory @Inject constructor (
         val logginInterceptor = HttpLoggingInterceptor()
 
         return OkHttpClient.Builder()
+            .addInterceptor(exponentialBackoffInterceptor)
             .addNetworkInterceptor(logginInterceptor)
             .addInterceptor { chain ->
                 val originalRequest = chain.request()

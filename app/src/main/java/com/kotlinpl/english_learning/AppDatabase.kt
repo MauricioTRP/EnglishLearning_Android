@@ -2,22 +2,28 @@ package com.kotlinpl.english_learning
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.kotlinpl.english_learning.quizzes.data.room.dao.QuestionDao
-import com.kotlinpl.english_learning.quizzes.data.room.dao.QuestionOptionDao
-import com.kotlinpl.english_learning.quizzes.data.room.dao.TagsDao
-import com.kotlinpl.english_learning.quizzes.data.room.entity.QuestionEntity
-import com.kotlinpl.english_learning.quizzes.data.room.entity.QuestionOptionEntity
-import com.kotlinpl.english_learning.quizzes.data.room.entity.QuestionTagCrossRefEntity
-import com.kotlinpl.english_learning.quizzes.data.room.entity.TagEntity
+import androidx.room.TypeConverters
+import com.kotlinpl.english_learning.common.data.local_storage.RoomConverters
+import com.kotlinpl.english_learning.quizzes.data.room.dao.AnswerDao
+import com.kotlinpl.english_learning.quizzes.data.room.dao.QuizItemDao
+import com.kotlinpl.english_learning.quizzes.data.room.entity.AnswersEntity
+import com.kotlinpl.english_learning.quizzes.data.room.entity.CompletionsEntity
+import com.kotlinpl.english_learning.quizzes.data.room.entity.QuizItemEntity
+import com.kotlinpl.english_learning.quizzes.data.room.entity.QuizOptionsEntity
 
 @Database(
-    entities = [QuestionEntity::class, QuestionTagCrossRefEntity::class, TagEntity::class, QuestionOptionEntity::class],
+    entities = [
+        AnswersEntity::class,
+        CompletionsEntity::class,
+        QuizItemEntity::class,
+        QuizOptionsEntity::class],
     version = 1,
     exportSchema = true,
 
 )
+@TypeConverters(RoomConverters::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun questionDao() : QuestionDao
-    abstract fun tagsDao() : TagsDao
-    abstract fun questionOptionDao() : QuestionOptionDao
+    abstract fun answerDao() : AnswerDao
+    abstract fun quizItemDao() : QuizItemDao
+
 }

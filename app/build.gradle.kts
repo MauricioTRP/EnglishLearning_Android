@@ -74,6 +74,9 @@ protobuf {
 
 dependencies {
     ksp(libs.hilt.compiler)
+    implementation(libs.hilt.worker)
+    implementation(libs.androidx.worker)
+
     ksp(libs.androidx.room.compiler)
     implementation(libs.bundles.room.db)
 

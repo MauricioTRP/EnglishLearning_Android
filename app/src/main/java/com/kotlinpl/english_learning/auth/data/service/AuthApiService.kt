@@ -11,7 +11,6 @@ import retrofit2.Response
 import retrofit2.http.Body
 
 interface AuthApiService {
-    // TODO: Check why is necessary to use /v1 if it's also set at ApiConfig
     @POST("/api/login")
     suspend fun login(
         @Body

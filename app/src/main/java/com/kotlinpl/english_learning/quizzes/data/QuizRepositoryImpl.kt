@@ -1,6 +1,7 @@
 package com.kotlinpl.english_learning.quizzes.data
 
 import android.content.Context
+import android.util.Log
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.NetworkType
@@ -82,6 +83,7 @@ class QuizRepositoryImpl @Inject constructor(
     }
 
     override suspend fun sync(): Boolean {
+        Log.d("QuizRepositoryImpl", "sync called")
         return try {
             val remoteQuizzes = quizzesRemoteDataSource.getQuizzes().content.map { it.toDomain() }
             quizzesLocalDataSource.deleteAll()

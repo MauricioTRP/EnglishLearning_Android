@@ -14,19 +14,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kotlinpl.english_learning.quizzes.data.room.relations.QuizWithOptions
+import com.kotlinpl.english_learning.quizzes.domain.Option
+import com.kotlinpl.english_learning.quizzes.domain.Quiz
 import com.kotlinpl.english_learning.quizzes.presentation.QuizzesViewModel
-import com.kotlinpl.english_learning.quizzes.domain.QuestionOption
-import com.kotlinpl.english_learning.quizzes.domain.Question
-import com.kotlinpl.english_learning.ui.common.ErrorScreen
-import com.kotlinpl.english_learning.ui.common.LoadingScreen
 import com.kotlinpl.english_learning.ui.theme.English_learningTheme
 
 @Composable
@@ -35,15 +34,16 @@ fun QuestionWithOptionComposable(
     mainViewModel: QuizzesViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val questionUiState by mainViewModel.quizUiState.collectAsState()
-    var selectedOption by remember { mutableStateOf<QuestionOption?>(null) }
+    val questionUiState by mainViewModel.quizUIState.collectAsState()
+    var selectedOption by remember { mutableStateOf<Option?>(null) }
 
     when {
         // Error Screen and Loading Screens are not implemented yet
-        questionUiState.error != null -> ErrorScreen()
-        questionUiState.isLoading -> LoadingScreen()
+        questionUiState.error != null -> Text("Error")
+        questionUiState.isLoading -> Text("Loading")
+        questionUiState.currentQuiz == null -> Text("Couldn't find quizzes")
         else -> QuestionWithOption(
-            quizQuestion = questionUiState.quizQuestion!!,
+            quizQuestion = questionUiState.currentQuiz!!,
             selectedOption = selectedOption,
             onSelectAnswer = { selectedOption = it },
             onSubmitAnswer = onSubmitAnswer,
@@ -54,9 +54,9 @@ fun QuestionWithOptionComposable(
 
 @Composable
 private fun QuestionWithOption(
-    quizQuestion: Question,
-    selectedOption: QuestionOption?,
-    onSelectAnswer: (QuestionOption) -> Unit,
+    quizQuestion: Quiz,
+    selectedOption: Option?,
+    onSelectAnswer: (Option) -> Unit,
     onSubmitAnswer: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -70,7 +70,7 @@ private fun QuestionWithOption(
             modifier = Modifier.padding(16.dp)
         )
 
-        quizQuestion.options?.forEach { quizOption ->
+        quizQuestion.options.forEach { quizOption ->
             val isSelected = selectedOption == quizOption
 
             Row(
@@ -89,10 +89,12 @@ private fun QuestionWithOption(
             ) {
                 RadioButton(
                     selected = isSelected,
-                    onClick = null
+                    onClick = {
+                        onSelectAnswer(quizOption)
+                    }
                 )
                 Text(
-                    text = quizOption.text,
+                    text = quizOption.optionText,
                     style = MaterialTheme
                         .typography
                         .bodyLarge,
@@ -116,7 +118,7 @@ private fun QuestionWithOption(
 @Composable
 private fun QuizOptionsPreview() {
     val question = getQuestion()
-    val selectedOption = QuestionOption("2", "I am going to sleep.", true)
+    val selectedOption = Option(optionText = "2", optionId = "I am going to sleep.")
 
     English_learningTheme {
             QuestionWithOption(
@@ -128,17 +130,17 @@ private fun QuizOptionsPreview() {
             )
     }
 }
-
-private fun getQuestion() : Question {
-    return Question(
+//
+private fun getQuestion() : Quiz {
+    return Quiz(
         id = "1",
-        text = "Question with options?",
+        text = "How are you?",
+        title = "The title of the question?",
         options = listOf(
-            QuestionOption(id = "1", "option 1.", false),
-            QuestionOption("2", "option 2.", true),
-            QuestionOption("3", "option 3.", false),
-            QuestionOption("4", "option 4.", false)
-        ),
-        tags = listOf("Easy", "Etiquette", "Moaning")
+            Option(optionId = "1", optionText = "I am fine."),
+            Option(optionId = "2", optionText = "I am going to sleep."),
+            Option(optionId = "3", optionText = "I am hungry."),
+            Option(optionId = "4", optionText = "I am tired."),
+        )
     )
 }

@@ -13,8 +13,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.kotlinpl.english_learning.MainViewModel
 import com.kotlinpl.english_learning.auth.presentation.login_screen.LoginScreen
 import com.kotlinpl.english_learning.auth.presentation.register_screen.RegisterScreen
+import com.kotlinpl.english_learning.onboarding.OnboardingScreen
 import com.kotlinpl.english_learning.quizzes.presentation.QuizzesScreen
 
 @Composable
@@ -23,6 +25,7 @@ fun NavigationComposable(
     isLoggedIn: Boolean, // Check if the user have started a session
     showSnackbar: (String) -> Unit, // Lambda to show a snackbar message
     haveDoneOnboarding: Boolean, // Check if user have already done onboarding
+    mainViewModel: MainViewModel, // ViewModel to be used by onboarding graph
     modifier: Modifier = Modifier // Modifier to be used inside Scaffold of MainActivity
 ) {
     NavHost(
@@ -44,6 +47,7 @@ fun NavigationComposable(
         onboardingGraph(
             navController = navController,
             showSnackbar = showSnackbar,
+            mainViewModel = mainViewModel,
             modifier = modifier
         )
     }
@@ -151,21 +155,22 @@ private fun NavGraphBuilder.quizzesGraph(
 
 private fun NavGraphBuilder.onboardingGraph(
     navController: NavController,
+    mainViewModel: MainViewModel,
     showSnackbar: (String) -> Unit,
     modifier: Modifier
 ) {
     navigation(startDestination = OnboardingScreens.OnboardingJourneyScreen.route, route = OnboardingScreens.Root.route) {
         composable(route = OnboardingScreens.OnboardingJourneyScreen.route) {
-            Button(
-                onClick = {
-                    navController.navigate(
-                        QuizzesScreens.QuizList.route
-                    )
+            OnboardingScreen(
+                onEndOnboarding = {
+                    // Mark onboarding as done
+                    mainViewModel.onboardingDone()
+                    // navigate to Quizzes
+                    navController.navigate(QuizzesScreens.QuizList.route)
+
                 },
                 modifier = modifier
-            ) {
-                Text("Onboarding")
-            }
+            )
         }
     }
 }

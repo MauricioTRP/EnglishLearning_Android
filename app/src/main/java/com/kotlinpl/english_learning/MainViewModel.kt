@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kotlinpl.english_learning.common.domain.OnboardingChecker
+import com.kotlinpl.english_learning.common.domain.OnboardingFlag
 import com.kotlinpl.english_learning.common.domain.TokenProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -27,14 +28,12 @@ class MainViewModel @Inject constructor (
     init {
         viewModelScope.launch {
             state = state.copy(isCheckingAuth = true)
-            Log.d("MainViewModel", "Checking auth...")
 
             try {
                 /**
                  * If there is a token stored on token provider, we can say that user is logged in
                  */
                 val token = tokenProvider.getToken()
-                Log.d("MainViewModel", "Token: ${token?.accessToken}")
 
 
                 /**
@@ -52,6 +51,12 @@ class MainViewModel @Inject constructor (
             } finally {
                 state = state.copy(isCheckingAuth = false)
             }
+        }
+    }
+
+    fun onboardingDone() {
+        viewModelScope.launch {
+            onboardingChecker.updateOnboardingFlag(OnboardingFlag(true))
         }
     }
 }

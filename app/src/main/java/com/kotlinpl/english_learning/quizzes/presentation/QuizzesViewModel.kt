@@ -20,8 +20,7 @@ class QuizzesViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val isSync = quizRepository.sync()
-            print("Is sync $isSync")
+            quizRepository.sync()
         }
         getQuizzes()
     }

@@ -56,6 +56,7 @@ class MainActivity : ComponentActivity() {
                         isLoggedIn = viewModel.state.isLoggedIn,
                         showSnackbar = showSnackbar,
                         haveDoneOnboarding = viewModel.state.haveDoneOnboarding,
+                        mainViewModel = viewModel,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

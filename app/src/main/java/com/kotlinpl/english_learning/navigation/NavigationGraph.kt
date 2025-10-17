@@ -153,6 +153,19 @@ private fun NavGraphBuilder.quizzesGraph(
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(QuizzesScreens.Root.route)
             }
+
+            /**
+             * ```kotlin
+             * val parentEntry = remember(it) {
+             *     navController.getBackStackEntry(QuizzesScreens.Root.route)
+             * }
+             *
+             * val quizzesViewModel = hiltViewModel<QuizzesViewModel>(parentEntry)
+             * ```
+             *
+             * Creates a single instance of [QuizzesViewModel] and share it across all composables
+             * of the [quizzesGraph] (Staring from [QuizzesScreens.Root.route])
+             */
             val quizzesViewModel = hiltViewModel<QuizzesViewModel>(parentEntry)
             QuizLandingScreen(
                 onStartQuiz = {

@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "answers")
 data class AnswersEntity(
-    @PrimaryKey
-    val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     @ColumnInfo(name = "quiz_id")
     val quizId: Int,
     @ColumnInfo(name = "option_ix")

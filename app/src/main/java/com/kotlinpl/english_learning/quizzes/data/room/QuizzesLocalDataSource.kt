@@ -1,6 +1,8 @@
 package com.kotlinpl.english_learning.quizzes.data.room
 
+import com.kotlinpl.english_learning.quizzes.data.room.dao.AnswerDao
 import com.kotlinpl.english_learning.quizzes.data.room.dao.QuizItemDao
+import com.kotlinpl.english_learning.quizzes.data.room.entity.AnswersEntity
 import com.kotlinpl.english_learning.quizzes.data.room.entity.CompletionsEntity
 import com.kotlinpl.english_learning.quizzes.data.room.mappers.toDomain
 import com.kotlinpl.english_learning.quizzes.data.room.mappers.toQuizWithOptions
@@ -11,7 +13,8 @@ import javax.inject.Inject
 
 typealias QuizId = Int
 class QuizzesLocalDataSource @Inject constructor (
-    private val quizItemDao: QuizItemDao
+    private val quizItemDao: QuizItemDao,
+    private val answerDao: AnswerDao
 ) {
     suspend fun getQuizItems() : List<Quiz> {
         return quizItemDao.getQuizWithOptions().map { it.toDomain() }
@@ -36,6 +39,10 @@ class QuizzesLocalDataSource @Inject constructor (
         }
 
         quizItemDao.insertCompletions(completions)
+    }
+
+    suspend fun insertAnswers(answers: List<AnswersEntity>) {
+        answerDao.insertAnswer(answers)
     }
 
     suspend fun insertQuizzes(quizzes: List<Quiz>) {

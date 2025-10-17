@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun QuizLandingScreen(
@@ -21,7 +22,7 @@ fun QuizLandingScreen(
     modifier: Modifier = Modifier
 ) {
     val quizUiState by quizzesViewModel.quizUIState.collectAsState()
-    val quizzes = quizUiState.quizzes
+    quizzesViewModel.getQuizzes()
 
     Column(modifier = modifier) {
         Text(
@@ -33,11 +34,11 @@ fun QuizLandingScreen(
 
         Button(
             onClick = {
-                quizzes.firstOrNull()?.let {
+                quizUiState.quizzes.firstOrNull()?.let {
                     onStartQuiz(it.id)
                 }
             },
-            enabled = quizzes.isNotEmpty(),
+            enabled = quizUiState.quizzes.isNotEmpty(),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text("Start Quiz")

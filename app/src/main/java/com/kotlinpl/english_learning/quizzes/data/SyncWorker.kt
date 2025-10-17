@@ -1,6 +1,7 @@
 package com.kotlinpl.english_learning.quizzes.data
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -35,6 +36,8 @@ class SyncWorker @AssistedInject constructor (
         val entryPoint = EntryPointAccessors.fromApplication(appContext, SyncWorkerEntryPoint::class.java)
         val quizzesService = entryPoint.quizzesService()
 
+        print("quizId: $quizId, answer: $answer")
+
         if (quizId == null || answer == null) {
             return Result.failure()
         }
@@ -44,6 +47,8 @@ class SyncWorker @AssistedInject constructor (
 
             Result.success()
         } catch (e: Exception) {
+            Log.e("Sync Worker", "Error while enqueuing task")
+            e.printStackTrace()
             Result.retry() // HTTPClient will handle backoff strategy
         }
     }

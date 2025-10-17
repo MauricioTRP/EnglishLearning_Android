@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,16 +28,22 @@ import com.kotlinpl.english_learning.quizzes.domain.Quiz
 import com.kotlinpl.english_learning.quizzes.presentation.QuizzesViewModel
 import com.kotlinpl.english_learning.ui.theme.English_learningTheme
 
+typealias QuizLinkId = String
 @Composable
 fun QuestionWithOptionComposable(
-    onSubmitAnswer: () -> Unit,
+    onSubmitAnswer: (QuizLinkId) -> Unit, // Used for navigation
     quizId: String,
     viewModel: QuizzesViewModel,
     modifier: Modifier = Modifier,
 ) {
     val questionUiState by viewModel.quizUIState.collectAsState()
     var selectedOption by remember { mutableStateOf<Option?>(null) }
-    viewModel.updateCurrentQuiz(quizId = quizId)
+
+    LaunchedEffect(questionUiState) {
+        if (questionUiState.currentQuiz == null) {
+            viewModel.getQuizById(quizId)
+        }
+    }
 
     when {
         // Error Screen and Loading Screens are not implemented yet
@@ -47,7 +54,12 @@ fun QuestionWithOptionComposable(
             quizQuestion = questionUiState.currentQuiz!!,
             selectedOption = selectedOption,
             onSelectAnswer = { selectedOption = it },
-            onSubmitAnswer = onSubmitAnswer,
+            onSubmitAnswer = { option ->
+                viewModel.submitQuiz(quizId = quizId, answer = listOf(option.optionId.toInt()))
+
+                // Need a way to get next QuizId
+                onSubmitAnswer(quizId)
+            },
             modifier = modifier
         )
     }
@@ -58,7 +70,7 @@ private fun QuestionWithOption(
     quizQuestion: Quiz,
     selectedOption: Option?,
     onSelectAnswer: (Option) -> Unit,
-    onSubmitAnswer: () -> Unit,
+    onSubmitAnswer: (Option) -> Unit,
     modifier: Modifier = Modifier
 ) {
     // Modifier.selectableGroup() is essential to ensure correct accessibility behavior
@@ -107,7 +119,8 @@ private fun QuestionWithOption(
 
         // Next Button
         Button(
-            onClick = onSubmitAnswer,
+            onClick = { onSubmitAnswer(selectedOption!!) },
+            enabled = selectedOption != null,
             modifier = Modifier.padding(16.dp)
         ) {
             Text(text = "Submit/Next")

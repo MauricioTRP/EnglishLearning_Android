@@ -29,7 +29,6 @@ class QuizzesViewModel @Inject constructor(
                 )
             }
         }
-        getQuizzes()
     }
 
     fun getQuizzes() {
@@ -37,34 +36,42 @@ class QuizzesViewModel @Inject constructor(
             _quizUIState.value = _quizUIState.value.copy(
                 isLoading = true
             )
-            quizRepository.getQuizItems().collect {
+            quizRepository.getQuizItems().collect { quizzes ->
                 _quizUIState.value = _quizUIState.value.copy(
-                    quizzes = it,
-                    isLoading = false // change loading state at first quiz being loaded
+                    quizzes = quizzes,
+                    isLoading = false, // change loading state at first quiz being loaded
+                    currentQuiz = quizzes.firstOrNull()
                 )
-
-                Log.d("QuizzesViewModel", "getQuizzes: $it")
             }
         }
     }
 
-    fun submitQuiz(quizId: String, answer: List<Int>) {
-        _quizUIState.value = _quizUIState.value.copy(
-            isLoading = true
-        )
+    fun getQuizById(quizId: String) {
         viewModelScope.launch {
-            quizRepository.submitAnswer(quizId, answer)
+            _quizUIState.value = _quizUIState.value.copy(
+                currentQuiz = quizUIState.value.quizzes.find { it.id == quizId },
+                isLoading = false
+            )
         }
-        _quizUIState.value = _quizUIState.value.copy(isLoading = false)
-        updateCurrentQuiz(quizId)
     }
 
-    fun updateCurrentQuiz(quizId: String) {
-        val quizzes = _quizUIState.value.quizzes
-        val currentQuiz = quizzes.firstOrNull { it.id == quizId }
+    fun submitQuiz(quizId: String, answer: List<Int>) {
+        viewModelScope.launch {
+            _quizUIState.value = _quizUIState.value.copy(
+                isLoading = true
+            )
+            quizRepository.submitAnswer(quizId, answer)
+            _quizUIState.value = _quizUIState.value.copy(isLoading = false)
+        }
+    }
 
+    fun updateCurrentQuiz(solvedQuizId: String) : String {
+        val updatedQuizzes = _quizUIState.value.quizzes.filter { it.id != solvedQuizId }
         _quizUIState.value = _quizUIState.value.copy(
-            currentQuiz = currentQuiz
+            quizzes = updatedQuizzes,
+            currentQuiz = updatedQuizzes.firstOrNull()
         )
+
+        return _quizUIState.value.currentQuiz?.id ?: "end"
     }
 }

@@ -10,14 +10,13 @@ import androidx.work.WorkManager
 import com.kotlinpl.english_learning.quizzes.data.remote.mappers.toDomain
 import com.kotlinpl.english_learning.quizzes.data.room.QuizzesLocalDataSource
 import com.kotlinpl.english_learning.quizzes.data.remote.service.QuizzesService
+import com.kotlinpl.english_learning.quizzes.data.room.mappers.toAnswerEntity
 import com.kotlinpl.english_learning.quizzes.domain.Quiz
 import com.kotlinpl.english_learning.quizzes.domain.QuizRepository
 import com.kotlinpl.english_learning.quizzes.domain.QuizCompleted
-import com.kotlinpl.english_learning.quizzes.domain.SolveFeedback
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.sql.Date
 import javax.inject.Inject
 
 /**
@@ -56,30 +55,11 @@ class QuizRepositoryImpl @Inject constructor(
     override suspend fun submitAnswer(
         quizId: String,
         answer: List<Int>
-    ): SolveFeedback {
-        val quiz = quizzesLocalDataSource.getQuizById(quizId)
-        val isCorrect = quiz.options.map { it.optionId.toInt() }.containsAll(answer)
+    ) {
+        val answers = answer.map { (quizId to it).toAnswerEntity() }
+        quizzesLocalDataSource.insertAnswers(answers)
 
-        if (isCorrect) {
-            val completedQuiz = QuizCompleted(
-                id = quiz.id,
-                completedAt = Date(System.currentTimeMillis())
-            )
-
-            // Queue a submission through a Worker.
-            // backoff is handled by the Worker as defined in HTTPClient
-            queueSubmissionSync(quizId, answer)
-
-            return SolveFeedback(
-                success = "Excelent Choice",
-                feedback = "Well done"
-            )
-        } else {
-            return SolveFeedback(
-                success = "Wrong Choice",
-                feedback = "Try again"
-            )
-        }
+        queueSubmissionSync(quizId, answer)
     }
 
     override suspend fun sync(): Boolean {
@@ -100,7 +80,7 @@ class QuizRepositoryImpl @Inject constructor(
             .build()
 
         val inputData = Data.Builder()
-            .putInt(SyncWorker.KEY_QUIZ_ID, quizId.toInt())
+            .putString(SyncWorker.KEY_QUIZ_ID, quizId)
             .putIntArray(SyncWorker.KEY_RESULT, answer.toIntArray())
             .build()
 

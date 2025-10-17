@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -19,9 +20,9 @@ import com.kotlinpl.english_learning.MainViewModel
 import com.kotlinpl.english_learning.auth.presentation.login_screen.LoginScreen
 import com.kotlinpl.english_learning.auth.presentation.register_screen.RegisterScreen
 import com.kotlinpl.english_learning.onboarding.OnboardingScreen
-import com.kotlinpl.english_learning.quizzes.presentation.QuizDetailScreen
 import com.kotlinpl.english_learning.quizzes.presentation.QuizLandingScreen
-import com.kotlinpl.english_learning.quizzes.presentation.SingleQuizScreen
+import com.kotlinpl.english_learning.quizzes.presentation.QuizzesViewModel
+import com.kotlinpl.english_learning.quizzes.presentation.components.QuestionWithOptionComposable
 
 @Composable
 fun NavigationComposable(
@@ -148,13 +149,18 @@ private fun NavGraphBuilder.quizzesGraph(
 ) {
     navigation(startDestination = QuizzesScreens.QuizMainScreen.route, route = QuizzesScreens.Root.route) {
         composable(route = QuizzesScreens.QuizMainScreen.route) {
+            // Way to handle shared ViewModels between views
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(QuizzesScreens.Root.route)
+            }
+            val quizzesViewModel = hiltViewModel<QuizzesViewModel>(parentEntry)
             QuizLandingScreen(
                 onStartQuiz = {
                     navController
                         .navigate(QuizzesScreens.QuizDetailScreen.createRoute(it))
                 },
                 showSnackbar = showSnackbar,
-                quizzesViewModel = hiltViewModel(),
+                quizzesViewModel = quizzesViewModel,
                 modifier = modifier
             )
         }
@@ -163,13 +169,28 @@ private fun NavGraphBuilder.quizzesGraph(
         composable(
             route = QuizzesScreens.QuizDetailScreen.route,
             arguments = listOf(navArgument("quizId") { type = NavType.StringType })
-        ) {
-            val quizId = it.arguments?.getString("quizId") ?: ""
-            SingleQuizScreen(
-                viewModel = hiltViewModel(),
+        ) { backStackEntry ->
+            val quizId = backStackEntry.arguments?.getString("quizId") ?: ""
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(QuizzesScreens.Root.route)
+            }
+            val quizzesViewModel = hiltViewModel<QuizzesViewModel>(parentEntry)
+
+            QuestionWithOptionComposable(
+                viewModel = quizzesViewModel,
                 quizId = quizId,
-                onSubmitAnswer = {
-                    // navController.navigate(QuizzesScreens.QuizDetailScreen.route)
+                onSubmitAnswer = { solvedQuizId ->
+                    val nextQuizId = quizzesViewModel.updateCurrentQuiz(solvedQuizId)
+                    val route = if (nextQuizId == "end") {
+                        QuizzesScreens.QuizMainScreen.route
+                    } else {
+                        QuizzesScreens.QuizDetailScreen.createRoute(nextQuizId)
+                    }
+                    navController.navigate(route = route) {
+                        popUpTo(QuizzesScreens.QuizDetailScreen.createRoute(solvedQuizId)) {
+                            inclusive = true
+                        }
+                    }
                 },
                 modifier = modifier,
             )

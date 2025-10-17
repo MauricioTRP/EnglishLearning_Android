@@ -19,7 +19,6 @@ import com.kotlinpl.english_learning.quizzes.data.room.entity.QuizOptionsEntity
         QuizOptionsEntity::class],
     version = 1,
     exportSchema = true,
-
 )
 @TypeConverters(RoomConverters::class)
 abstract class AppDatabase : RoomDatabase() {

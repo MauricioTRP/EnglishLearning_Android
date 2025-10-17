@@ -30,17 +30,17 @@ class SyncWorker @AssistedInject constructor (
 
 
     override suspend fun doWork(): Result {
-        val quizId = inputData.getInt(KEY_QUIZ_ID, -1)
+        val quizId = inputData.getString(KEY_QUIZ_ID)
         val answer = inputData.getIntArray(KEY_RESULT) ?.toList()
         val entryPoint = EntryPointAccessors.fromApplication(appContext, SyncWorkerEntryPoint::class.java)
         val quizzesService = entryPoint.quizzesService()
 
-        if (quizId == -1 || answer == null) {
+        if (quizId == null || answer == null) {
             return Result.failure()
         }
 
         return try {
-            quizzesService.solveQuiz(quizId, AnswerDto(answer))
+            quizzesService.solveQuiz(quizId.toInt(), AnswerDto(answer))
 
             Result.success()
         } catch (e: Exception) {

@@ -45,7 +45,7 @@ class QuizRepositoryImpl @Inject constructor(
         emit(cachedQuizzes)
     }
 
-    override suspend fun getQuizItemById(id: Int): Quiz {
+    override suspend fun getQuizItemById(id: String): Quiz {
         return quizzesLocalDataSource.getQuizById(id)
     }
 
@@ -54,7 +54,7 @@ class QuizRepositoryImpl @Inject constructor(
     }
 
     override suspend fun submitAnswer(
-        quizId: Int,
+        quizId: String,
         answer: List<Int>
     ): SolveFeedback {
         val quiz = quizzesLocalDataSource.getQuizById(quizId)
@@ -94,13 +94,13 @@ class QuizRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun queueSubmissionSync(quizId: Int, answer: List<Int>) {
+    private fun queueSubmissionSync(quizId: String, answer: List<Int>) {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
         val inputData = Data.Builder()
-            .putInt(SyncWorker.KEY_QUIZ_ID, quizId)
+            .putInt(SyncWorker.KEY_QUIZ_ID, quizId.toInt())
             .putIntArray(SyncWorker.KEY_RESULT, answer.toIntArray())
             .build()
 

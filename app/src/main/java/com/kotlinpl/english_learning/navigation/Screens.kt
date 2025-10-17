@@ -49,9 +49,17 @@ sealed interface QuizzesScreens{
             get() = "quizzes_root"
     }
 
-    data object QuizList : QuizzesScreens, Screen {
+    data object QuizMainScreen : QuizzesScreens, Screen {
         override val route: String
             get() = "quiz_list"
+    }
+
+    data object QuizDetailScreen : QuizzesScreens, Screen {
+        private const val ROUTE_PREFIX = "quiz_detail"
+        override val route: String
+            get() = "$ROUTE_PREFIX/{quizId}"
+
+        fun createRoute(quizId: String) = "$ROUTE_PREFIX/$quizId"
     }
 }
 

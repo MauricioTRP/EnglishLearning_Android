@@ -10,14 +10,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.kotlinpl.english_learning.MainViewModel
 import com.kotlinpl.english_learning.auth.presentation.login_screen.LoginScreen
 import com.kotlinpl.english_learning.auth.presentation.register_screen.RegisterScreen
 import com.kotlinpl.english_learning.onboarding.OnboardingScreen
-import com.kotlinpl.english_learning.quizzes.presentation.QuizzesScreen
+import com.kotlinpl.english_learning.quizzes.presentation.QuizDetailScreen
+import com.kotlinpl.english_learning.quizzes.presentation.QuizLandingScreen
+import com.kotlinpl.english_learning.quizzes.presentation.SingleQuizScreen
 
 @Composable
 fun NavigationComposable(
@@ -103,7 +107,7 @@ private fun NavGraphBuilder.authGraph(
                 },
                 onLoggedIn = {
                     Log.d("NavGraph", "Successfully logged in")
-                    navController.navigate(QuizzesScreens.QuizList.route)
+                    navController.navigate(QuizzesScreens.QuizMainScreen.route)
                 },
                 showSnackbar = showSnackbar,
                 modifier = modifier,
@@ -127,7 +131,7 @@ private fun NavGraphBuilder.authGraph(
                     }
                 },
                 onLoggedIn = {
-                    navController.navigate(QuizzesScreens.QuizList.route)
+                    navController.navigate(QuizzesScreens.QuizMainScreen.route)
                 },
                 showSnackbar = showSnackbar,
                 modifier = modifier
@@ -142,14 +146,34 @@ private fun NavGraphBuilder.quizzesGraph(
     showSnackbar: (String) -> Unit,
     modifier: Modifier
 ) {
-    navigation(startDestination = QuizzesScreens.QuizList.route, route = QuizzesScreens.Root.route) {
-        composable(route = QuizzesScreens.QuizList.route) {
-            QuizzesScreen(
-                viewModel = hiltViewModel(),
+    navigation(startDestination = QuizzesScreens.QuizMainScreen.route, route = QuizzesScreens.Root.route) {
+        composable(route = QuizzesScreens.QuizMainScreen.route) {
+            QuizLandingScreen(
+                onStartQuiz = {
+                    navController
+                        .navigate(QuizzesScreens.QuizDetailScreen.createRoute(it))
+                },
+                showSnackbar = showSnackbar,
+                quizzesViewModel = hiltViewModel(),
                 modifier = modifier
             )
         }
 
+        // Detail Screen (Quiz by Id)
+        composable(
+            route = QuizzesScreens.QuizDetailScreen.route,
+            arguments = listOf(navArgument("quizId") { type = NavType.StringType })
+        ) {
+            val quizId = it.arguments?.getString("quizId") ?: ""
+            SingleQuizScreen(
+                viewModel = hiltViewModel(),
+                quizId = quizId,
+                onSubmitAnswer = {
+                    // navController.navigate(QuizzesScreens.QuizDetailScreen.route)
+                },
+                modifier = modifier,
+            )
+        }
     }
 }
 
@@ -166,7 +190,7 @@ private fun NavGraphBuilder.onboardingGraph(
                     // Mark onboarding as done
                     mainViewModel.onboardingDone()
                     // navigate to Quizzes
-                    navController.navigate(QuizzesScreens.QuizList.route)
+                    navController.navigate(QuizzesScreens.QuizMainScreen.route)
 
                 },
                 modifier = modifier
@@ -190,6 +214,6 @@ private fun checkInitialRoute(
     } else if (!haveDoneOnboarding){
         OnboardingScreens.Root.route
     } else {
-        QuizzesScreens.QuizList.route
+        QuizzesScreens.Root.route
     }
 }

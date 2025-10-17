@@ -56,7 +56,11 @@ class MainViewModel @Inject constructor (
 
     fun onboardingDone() {
         viewModelScope.launch {
-            onboardingChecker.updateOnboardingFlag(OnboardingFlag(true))
+            try {
+                onboardingChecker.updateOnboardingFlag(OnboardingFlag(true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }

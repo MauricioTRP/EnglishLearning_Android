@@ -4,8 +4,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface QuizRepository {
     suspend fun getQuizItems(): Flow<List<Quiz>>
-    suspend fun getQuizItemById(id: Int): Quiz
+    suspend fun getQuizItemById(id: String): Quiz
     suspend fun getCompletedQuizzes(): List<QuizCompleted>
-    suspend fun submitAnswer(quizId: Int,answer: List<Int>): SolveFeedback
+    suspend fun submitAnswer(quizId: String,answer: List<Int>): SolveFeedback
     suspend fun sync() : Boolean
 }

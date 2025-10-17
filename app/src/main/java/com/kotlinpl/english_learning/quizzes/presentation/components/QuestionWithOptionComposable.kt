@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.kotlinpl.english_learning.quizzes.data.room.relations.QuizWithOptions
 import com.kotlinpl.english_learning.quizzes.domain.Option
 import com.kotlinpl.english_learning.quizzes.domain.Quiz
 import com.kotlinpl.english_learning.quizzes.presentation.QuizzesViewModel
@@ -31,11 +30,13 @@ import com.kotlinpl.english_learning.ui.theme.English_learningTheme
 @Composable
 fun QuestionWithOptionComposable(
     onSubmitAnswer: () -> Unit,
-    mainViewModel: QuizzesViewModel,
+    quizId: String,
+    viewModel: QuizzesViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val questionUiState by mainViewModel.quizUIState.collectAsState()
+    val questionUiState by viewModel.quizUIState.collectAsState()
     var selectedOption by remember { mutableStateOf<Option?>(null) }
+    viewModel.updateCurrentQuiz(quizId = quizId)
 
     when {
         // Error Screen and Loading Screens are not implemented yet

@@ -1,6 +1,5 @@
 package com.kotlinpl.english_learning.quizzes.presentation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.kotlinpl.english_learning.quizzes.presentation.components.QuestionWithOptionComposable
@@ -8,13 +7,16 @@ import com.kotlinpl.english_learning.quizzes.presentation.components.QuestionWit
 //import com.kotlinpl.english_learning.quizzes.presentation.components.QuestionWithOptionComposable
 
 @Composable
-fun QuizzesScreen(
+fun SingleQuizScreen(
     viewModel: QuizzesViewModel,
+    quizId: String,
+    onSubmitAnswer: () -> Unit,
     modifier: Modifier
 ) {
     QuestionWithOptionComposable(
-        onSubmitAnswer = {  },
-        mainViewModel = viewModel,
+        onSubmitAnswer = onSubmitAnswer,
+        viewModel = viewModel,
+        quizId = quizId,
         modifier = modifier
     )
 }

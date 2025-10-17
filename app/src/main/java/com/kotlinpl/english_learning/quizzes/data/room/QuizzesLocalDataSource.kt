@@ -17,8 +17,8 @@ class QuizzesLocalDataSource @Inject constructor (
         return quizItemDao.getQuizWithOptions().map { it.toDomain() }
     }
 
-    suspend fun getQuizById(id: Int) : Quiz {
-        return quizItemDao.getQuizWithOptionsById(id.toString()).toDomain()
+    suspend fun getQuizById(id: String) : Quiz {
+        return quizItemDao.getQuizWithOptionsById(id).toDomain()
     }
 
     suspend fun getCompletedQuizzes() : List<QuizCompleted> {

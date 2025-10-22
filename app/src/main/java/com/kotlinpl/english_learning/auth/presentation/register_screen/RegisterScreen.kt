@@ -51,7 +51,7 @@ import com.kotlinpl.english_learning.auth.domain.PASSWORD_MIN_LENGTH
 import com.kotlinpl.english_learning.auth.domain.PasswordValidationState
 import com.kotlinpl.english_learning.common.presentation.EyeClosed
 import com.kotlinpl.english_learning.common.presentation.EyeOpen
-import com.kotlinpl.english_learning.ui.theme.English_learningTheme
+import com.kotlinpl.english_learning.common.presentation.theme.English_learningTheme
 
 @Composable
 fun RegisterScreen(

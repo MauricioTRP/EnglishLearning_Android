@@ -1,4 +1,4 @@
-package com.kotlinpl.english_learning.ui.theme
+package com.kotlinpl.english_learning.common.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

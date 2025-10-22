@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.kotlinpl.english_learning.quizzes.domain.Option
 import com.kotlinpl.english_learning.quizzes.domain.Quiz
 import com.kotlinpl.english_learning.quizzes.presentation.QuizzesViewModel
-import com.kotlinpl.english_learning.ui.theme.English_learningTheme
+import com.kotlinpl.english_learning.common.presentation.theme.English_learningTheme
 
 typealias QuizLinkId = String
 @Composable

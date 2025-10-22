@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.sp
 import com.kotlinpl.english_learning.R
 import com.kotlinpl.english_learning.common.presentation.EyeClosed
 import com.kotlinpl.english_learning.common.presentation.EyeOpen
-import com.kotlinpl.english_learning.ui.theme.English_learningTheme
+import com.kotlinpl.english_learning.common.presentation.theme.English_learningTheme
 
 @Composable
 fun LoginScreen(
